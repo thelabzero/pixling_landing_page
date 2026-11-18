@@ -5,7 +5,7 @@ towards the image edges so no rectangle shows on the page; fully opaque pixels (
 import os
 from PIL import Image, ImageChops
 SRC, DST = 'assets/renders', 'assets/web'
-SIZES = {'dino_hero': 1100, 'dino_front_blank': 1100, 'dino_back': 800, 'dino_exploded': 1400}
+SIZES = {'dino_hero': 1100, 'dino_front_blank': 1100, 'dino_back': 800, 'dino_exploded': 1400, 'dino_cta_look': 1100}
 os.makedirs(DST, exist_ok=True)
 
 def edge_mask(W, H, n=200):

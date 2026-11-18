@@ -50,7 +50,25 @@ canvas,video{image-rendering:pixelated;image-rendering:crisp-edges;display:block
 .prod img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none}
 .prod .scr{position:absolute;left:34.86%;top:38.81%;width:30.34%;height:15.14%;background:#000;overflow:hidden}
 .prod .scr>*{width:100%;height:100%;object-fit:contain}
-.ctaimg{width:min(400px,100%);display:block;margin:0 auto -40px}
+.ctaprod{position:relative;width:min(440px,100%);margin:0 auto -40px}
+.ctaprod img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none}
+.ctabob{position:relative}
+/* reserved: Dino moves to the centre, faces the visitor, bobs, and sends up pixel hearts */
+.ctaprod.front .qscr{clip-path:none}
+.ctaprod.bob .ctabob{animation:ctabob 2.6s steps(5) infinite}
+@keyframes ctabob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.hrt{position:absolute;width:14px;height:12px;background-size:100% 100%;image-rendering:pixelated;pointer-events:none;opacity:0;animation:hrt 1.9s steps(9) forwards}
+@keyframes hrt{0%{opacity:0;transform:translate(0,0)}12%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),-130px)}}
+.cta.is-reserved{grid-template-columns:1fr;justify-items:center;align-items:start;text-align:center;gap:0;padding-bottom:56px}
+.cta.is-reserved .cta-right{order:-1;width:100%}
+.cta.is-reserved .cta-intro{display:none}
+.cta.is-reserved .cta-left{width:100%;max-width:560px}
+.cta.is-reserved .ctaprod{width:min(400px,100%);margin:0 auto -60px}
+.cta.is-reserved .done{margin:0 auto}
+.cta.is-reserved .done-actions{justify-content:center}
+.cta.is-reserved .done p{margin-left:auto;margin-right:auto}
+.qscr{position:absolute;left:0;top:0;width:128px;height:64px;transform-origin:0 0;background:#000;overflow:hidden;clip-path:inset(0 5% 0 0)} /* right edge tucks behind the bezel lip, as the recessed screen does in the render */
+.qscr canvas{display:block;width:128px;height:64px;image-rendering:pixelated}
 
 /* ---------- STICKY TOP BAR ---------- */
 html{scroll-padding-top:68px}
@@ -207,6 +225,21 @@ section.promise{padding:40px 0 100px}
 .prom b{display:block;font-size:18px;font-weight:600;margin-top:8px}
 .prom p{font-size:14px;line-height:1.6;color:var(--ink2);margin-top:8px}
 
+/* ---------- CTA: reservation confirmed ---------- */
+.done{display:block;margin:26px 0 64px;max-width:600px;animation:doneIn .5s steps(5) both}
+.done[hidden],.cta form[hidden]{display:none}
+@keyframes doneIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.done-tag{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:var(--cream);font-family:var(--mono);font-size:12px;padding:5px 10px 5px 8px}
+.done-tag canvas{width:18px;height:14px}
+.done h3{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.15;margin-top:14px}
+.done p{color:var(--sand);font-size:15px;line-height:1.6;margin-top:10px}
+.done p b{color:var(--cream);font-weight:500}
+.done-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:20px}
+.linkbtn{background:none;border:0;color:var(--muted);font-family:var(--mono);font-size:12px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.linkbtn:hover{color:var(--cream)}
+.confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.topbar .tbbtn.is-reserved{background:var(--teal);color:var(--cream)}
+
 /* ---------- CTA ---------- */
 .cta{background:var(--night);color:var(--cream);display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:end;padding:64px 64px 0;position:relative;overflow:hidden;margin-bottom:60px}
 .cta h2{font-size:clamp(30px,3.6vw,44px);font-weight:600;letter-spacing:-.03em;line-height:1.1}
@@ -307,13 +340,15 @@ footer a:hover{color:var(--teal)}
   .cta .box{flex-wrap:wrap;gap:14px 28px}
   .cta form{margin:22px 0 20px}
   .cta .msg{margin:0 0 20px}
-  .ctaimg{width:min(300px,90%);margin-bottom:-24px}
+  .ctaprod{width:min(320px,90%);margin-bottom:-24px}
+  .cta.is-reserved .ctaprod{width:min(300px,90%);margin-bottom:-44px}
 }
 @media (max-width:380px){
   .tbbtn{padding-left:10px;font-size:12px}
   .gestures{grid-template-columns:1fr 1fr;gap:8px}
 }
-@media (prefers-reduced-motion:reduce){.hop{animation:none}}
+@media (max-width:920px){.done{margin:22px 0 28px}.done h3{font-size:26px}}
+@media (prefers-reduced-motion:reduce){.hop{animation:none}.done{animation:none}.ctaprod.bob .ctabob{animation:none}.hrt{display:none}}
 </style>
 </head>
 <body>
@@ -479,7 +514,8 @@ footer a:hover{color:var(--teal)}
 <!-- ================= CTA ================= -->
 <div class="wrap" id="preorder">
   <div class="cta step lg">
-    <div>
+    <div class="cta-left">
+      <div class="cta-intro">
       <div class="eyebrow">pre-order · dino by pixling</div>
       <h2 style="margin-top:14px">Bring Dino home<span class="sp">.</span></h2>
       <p>For your desk, your shelf, or the spot next to your monitor. Reserve yours now and we'll write the moment pre-orders open, with the price and shipping date.</p>
@@ -487,6 +523,7 @@ footer a:hover{color:var(--teal)}
         <div><span class="mono">in the box</span>Dino · USB-C cable</div>
         <div><span class="mono">colour</span>matte black · more later</div>
         <div><span class="mono">price</span>coming soon</div>
+      </div>
       </div>
       <!-- Submissions go to PostHog as the event pixling_waitlist_submit (see the tracking script at the end of the page). -->
       <form id="wl">
@@ -497,8 +534,25 @@ footer a:hover{color:var(--teal)}
         <button class="btn step sm" type="submit">reserve mine <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></button>
       </form>
       <div class="msg" id="wlmsg"></div>
+      <div class="done" id="wldone" hidden aria-live="polite">
+        <div class="done-txt">
+          <div class="done-tag"><canvas id="doneTick"></canvas><span>reserved</span></div>
+          <h3>You're in, <span id="doneName">friend</span>.</h3>
+          <p id="doneLine">Your Dino is reserved. We'll write when pre-orders open, with the price and shipping date. Nothing to pay today.</p>
+          <div class="done-actions">
+            <button class="btn step sm" type="button" id="shareBtn">tell a friend <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></button>
+            <button class="linkbtn" type="button" id="againBtn">reserve another</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div><img class="ctaimg" src="assets/web/dino_hero.webp" alt="Dino" loading="lazy"></div>
+    <div class="cta-right"><div class="ctaprod" id="ctaImg" data-quad="29.71,38.37 51.77,40.41 51.76,55.16 29.89,52.09">
+      <div class="ctabob">
+        <img src="assets/web/dino_cta_look.webp" width="1100" height="1100" alt="Dino looking at the form" loading="lazy">
+        <div class="qscr"><canvas id="ctaScreen"></canvas></div>
+      </div>
+    </div></div>
+    <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
   </div>
   <footer>
     <span>© 2026 Pixling</span>
@@ -1013,6 +1067,7 @@ function loop(t){players.forEach(p=>{if(p.hidden)return;const g=frameFor(p,t);if
 const io=new IntersectionObserver(es=>es.forEach(e=>{const p=e.target._p;if(p)p.hidden=!e.isIntersecting;}),{rootMargin:'200px'});
 function attach(cv,spec,delay){const p=player(cv,spec,delay);cv._p=p;io.observe(cv);return p;}
 requestAnimationFrame(loop);
+window.PXL_DINO={attach:(cv,spec)=>attach(cv,spec,0),set:(p,spec)=>set(p,spec),hop:el=>hop(el)};
 
 /* icons (16x16 from the device icon set) */
 document.querySelectorAll('canvas[data-icon]').forEach(cv=>{const g=WEDGE.ICON[cv.dataset.icon];if(!g)return;cv.width=16;cv.height=16;const c=cv.getContext('2d');c.fillStyle=cv.dataset.fg||'#282020';for(let i=0;i<256;i++)if(g[i])c.fillRect(i%16,(i/16)|0,1,1);});
@@ -1170,6 +1225,94 @@ const rail=document.getElementById('rail');let railMax=0;
 if(rail)rail.addEventListener('scroll',()=>{const p=Math.round(rail.scrollLeft/(rail.scrollWidth-rail.clientWidth||1)*100);
   [50,100].forEach(d=>{if(p>=d&&railMax<d){railMax=d;pxl('day_rail_scroll',{depth:d});}});},{passive:true});
 
+/* ---------- pre-order Dino: faces the form and reacts while it is filled in ---------- */
+const ctaBox=document.getElementById('ctaImg'),ctaCv=document.getElementById('ctaScreen');
+const CTAM={watch:{key:'idle',frame:7},excited:{key:'expressions',frame:15},happy:{key:'expressions',frame:1},
+  love:{key:'expressions',frame:2},surprised:{key:'expressions',frame:6},idle:{key:'idle'}};
+let ctaP=null,ctaMoodT=0,ctaOutT=0,ctaLastHop=0;
+const ctaReduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function ctaSolve(A,b){const n=b.length,M=A.map((r,i)=>r.concat(b[i]));
+  for(let c=0;c<n;c++){let m=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[m][c]))m=r;
+    if(Math.abs(M[m][c])<1e-12)return null;[M[c],M[m]]=[M[m],M[c]];
+    for(let r=c+1;r<n;r++){const f=M[r][c]/M[c][c];for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k];}}
+  const x=new Array(n);for(let r=n-1;r>=0;r--){let t=M[r][n];for(let k=r+1;k<n;k++)t-=M[r][k]*x[k];x[r]=t/M[r][r];}return x;}
+function ctaFit(){if(!ctaBox)return;const W=ctaBox.clientWidth,H=ctaBox.clientHeight;if(!W||!H)return;
+  const dst=ctaBox.dataset.quad.trim().split(/\s+/).map(q=>{const[a,b]=q.split(',').map(Number);return[a/100*W,b/100*H];});
+  const src=[[0,0],[128,0],[128,64],[0,64]],A=[],b=[];
+  for(let i=0;i<4;i++){const[x,y]=src[i],[u,v]=dst[i];A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v);}
+  const h=ctaSolve(A,b);if(!h)return;
+  ctaBox.querySelector('.qscr').style.transform='matrix3d('+[h[0],h[3],0,h[6],h[1],h[4],0,h[7],0,0,1,0,h[2],h[5],0,1].join(',')+')';}
+if(ctaBox&&ctaCv){
+  if(window.PXL_DINO)ctaP=PXL_DINO.attach(ctaCv,CTAM.idle);
+  const im=ctaBox.querySelector('img');if(im)im.addEventListener('load',ctaFit);
+  addEventListener('resize',ctaFit);if('ResizeObserver' in window)new ResizeObserver(ctaFit).observe(ctaBox);ctaFit();
+}
+/* the face to rest on: excited when every required field is valid, otherwise watching the form */
+/* NB: form.checkValidity() fires 'invalid' events on every bad field (would trigger the surprised face and the analytics), so read the validity flags instead */
+const ctaValid=()=>[...wl.elements].every(e=>!e.willValidate||e.validity.valid);
+const ctaRest=()=>ctaValid()?CTAM.excited:CTAM.watch;
+function ctaMood(spec,ms,after){if(!ctaP)return;clearTimeout(ctaMoodT);PXL_DINO.set(ctaP,spec);
+  if(ms)ctaMoodT=setTimeout(()=>PXL_DINO.set(ctaP,after?after():ctaRest()),ms);}
+const CTA_LOOK={src:'assets/web/dino_cta_look.webp',quad:ctaBox?ctaBox.dataset.quad:'',alt:'Dino looking at the form'};
+/* front view (same render as the product shots): the screen is an upright rectangle */
+const CTA_FRONT={src:'assets/web/dino_front_blank.webp',quad:'34.86,38.81 65.20,38.81 65.20,53.95 34.86,53.95',alt:'Dino, facing you'};
+if(ctaBox){const pre=new Image();pre.src=CTA_FRONT.src;}
+const ctaCard=document.querySelector('.cta');let ctaLoopT=0,ctaHeartT=0;
+const ctaHeartUrls=['#2F9083','#C7EAFF'].map(col=>{const rows=['.##.##.','#######','#######','.#####.','..###..','...#...'],cv=document.createElement('canvas');
+  cv.width=7;cv.height=6;const c=cv.getContext('2d');c.fillStyle=col;rows.forEach((r,y)=>[...r].forEach((ch,x)=>{if(ch==='#')c.fillRect(x,y,1,1);}));return cv.toDataURL();});
+function ctaHearts(n){if(!ctaBox||ctaReduce)return;for(let i=0;i<n;i++){const h=document.createElement('i');h.className='hrt';
+  h.style.left=(22+Math.random()*56)+'%';h.style.top=(26+Math.random()*16)+'%';h.style.setProperty('--dx',((Math.random()-.5)*60)+'px');
+  h.style.backgroundImage='url('+ctaHeartUrls[i%2]+')';h.style.animationDelay=(i*120)+'ms';h.addEventListener('animationend',()=>h.remove());ctaBox.appendChild(h);}}
+/* reserved: Dino to the centre, facing the visitor; fresh sign-ups also get the bob, hearts and a pet every few seconds */
+function ctaReserved(on,fresh){if(!ctaBox)return;const im=ctaBox.querySelector('img'),to=on?CTA_FRONT:CTA_LOOK;
+  clearInterval(ctaLoopT);clearInterval(ctaHeartT);ctaBox.classList.remove('bob');
+  ctaBox.querySelectorAll('.hrt').forEach(h=>h.remove());
+  ctaCard.classList.toggle('is-reserved',on);ctaBox.classList.toggle('front',on);
+  ctaBox.dataset.quad=to.quad;if(im){if(!im.src.endsWith(to.src))im.src=to.src;im.alt=to.alt;}ctaFit();
+  if(on&&fresh&&!ctaReduce){ctaBox.classList.add('bob');ctaHearts(8);let n=0;
+    ctaHeartT=setInterval(()=>{ctaHearts(2);if(++n>8)clearInterval(ctaHeartT);},800);
+    ctaLoopT=setInterval(()=>{if(doneBox.hidden||document.hidden)return;if(ctaP)PXL_DINO.set(ctaP,{key:'pet',once:true,then:CTAM.love});ctaHop();},6500);}}
+function ctaHop(){if(!ctaBox||ctaReduce||!window.PXL_DINO)return;const n=performance.now();if(n-ctaLastHop<700)return;ctaLastHop=n;PXL_DINO.hop(ctaBox);}
+
+/* reservation confirmed: live Dino face, pixel tick, pixel confetti, share */
+const doneBox=document.getElementById('wldone');
+const TICK=['........#','.......##','#.....##.','##...##..','.##.##...','..###....','...#.....'];
+function drawTick(cv){const u=2,cells=[];TICK.forEach((r,y)=>[...r].forEach((c,x)=>{if(c==='#')cells.push([x,y]);}));cells.sort((a,b)=>a[0]-b[0]);
+  cv.width=9*u;cv.height=7*u;const c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);c.fillStyle='#FCF8F0';let i=0;
+  const t=setInterval(()=>{if(i>=cells.length){clearInterval(t);return;}const[x,y]=cells[i++];c.fillRect(x*u,y*u,u,u);},45);}
+function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const cv=document.getElementById('confetti'),box=cv.parentElement.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),U=6;
+  cv.width=box.width*dpr;cv.height=box.height*dpr;const c=cv.getContext('2d');c.scale(dpr,dpr);
+  const cols=['#FCF8F0','#2F9083','#C7EAFF','#E6DED4'],ps=[];
+  for(let i=0;i<90;i++)ps.push({x:box.width*(.15+Math.random()*.7),y:box.height*(cv.parentElement.classList.contains('is-reserved')?.34:.55),vx:(Math.random()-.5)*9,vy:-(6+Math.random()*9),c:cols[i%4],s:U*(Math.random()<.25?2:1)});
+  const t0=performance.now();(function f(t){const k=(t-t0)/1000;c.clearRect(0,0,box.width,box.height);
+    ps.forEach(p=>{p.vy+=.38;p.x+=p.vx;p.y+=p.vy;c.globalAlpha=Math.max(0,1-k/2.6);c.fillStyle=p.c;
+      c.fillRect(Math.round(p.x/U)*U,Math.round(p.y/U)*U,p.s,p.s);});
+    if(k<2.6)requestAnimationFrame(f);else c.clearRect(0,0,box.width,box.height);})(t0);}
+function showReserved(name,email,fresh){
+  const first=(name||'').trim().split(/\s+/)[0]||'friend';
+  document.getElementById('doneName').textContent=first;
+  const line=document.getElementById('doneLine');
+  if(email){line.textContent='';line.append('Your Dino is reserved. We\'ll email ');const b=document.createElement('b');b.textContent=email;line.append(b,' when pre-orders open, with the price and shipping date. Nothing to pay today.');}
+  wl.hidden=true;msg.textContent='';doneBox.hidden=false;
+  ctaReserved(true,fresh);
+  if(ctaP){clearTimeout(ctaMoodT);clearTimeout(ctaOutT);PXL_DINO.set(ctaP,fresh?{key:'pet',once:true,then:CTAM.love}:CTAM.love);}
+  drawTick(document.getElementById('doneTick'));
+  const tb=document.querySelector('.topbar .tbbtn');if(tb){tb.classList.add('is-reserved');tb.firstChild.textContent='reserved ';tb.setAttribute('href','#preorder');}
+  if(fresh){confetti();const im=document.getElementById('ctaImg');if(im&&window.PXL_DINO)PXL_DINO.hop(im);
+    ctaCard.scrollIntoView({behavior:'smooth',block:'center'});}
+  try{localStorage.setItem('pixling_reserved',JSON.stringify({n:first}));}catch(_){}
+}
+document.getElementById('shareBtn').addEventListener('click',async()=>{
+  const url=location.href.split('#')[0],b=document.getElementById('shareBtn');pxl('share_click');
+  try{if(navigator.share){await navigator.share({title:'Dino by Pixling',text:'I just reserved a Dino, a tiny desk friend with a pixel face.',url});return;}
+    await navigator.clipboard.writeText(url);b.firstChild.textContent='link copied ';}catch(_){}});
+document.getElementById('againBtn').addEventListener('click',()=>{pxl('reserve_another');
+  try{localStorage.removeItem('pixling_reserved');}catch(_){}
+  doneBox.hidden=true;wl.hidden=false;ctaReserved(false);ctaMood(CTAM.idle);const tb=document.querySelector('.topbar .tbbtn');
+  if(tb){tb.classList.remove('is-reserved');tb.firstChild.textContent='pre-order ';}
+  wl.querySelector('input[name=name]').focus();});
+
 /* waitlist form */
 const wl=document.getElementById('wl'),msg=document.getElementById('wlmsg');
 if(wl){let started=false,t0=0;const filled=new Set();
@@ -1181,7 +1324,18 @@ if(wl){let started=false,t0=0;const filled=new Set();
     pxl('waitlist_submit',Object.assign({name,email,mobile,has_mobile:!!mobile,consent_text:'v1-preorder-updates-only',
       seconds_to_submit:started?Math.round((performance.now()-t0)/100)/10:null,max_scroll_pct:maxScroll},UTM));
     try{if(ready)posthog.identify(email,{email,name,mobile:mobile||undefined,pixling_waitlist:true});}catch(_){}
-    msg.textContent='reserved. we\'ll write when pre-orders open.';wl.reset();started=false;filled.clear();});
+    showReserved(name,email,true);wl.reset();started=false;filled.clear();});
+  /* pre-order Dino reacts to the form (separate listeners; analytics above untouched) */
+  wl.addEventListener('focusin',()=>{clearTimeout(ctaOutT);ctaMood(ctaRest());});
+  wl.addEventListener('input',()=>{if(ctaValid()){ctaMood(CTAM.excited);}else ctaMood(CTAM.excited,1100);ctaHop();});
+  wl.addEventListener('change',e=>{if(e.target.name&&e.target.value&&!ctaValid())ctaMood(CTAM.happy,900);});
+  wl.addEventListener('invalid',()=>ctaMood(CTAM.surprised,1300),true);
+  wl.addEventListener('focusout',()=>{clearTimeout(ctaOutT);ctaOutT=setTimeout(()=>{
+    if(!wl.contains(document.activeElement)&&doneBox.hidden){clearTimeout(ctaMoodT);PXL_DINO&&ctaP&&PXL_DINO.set(ctaP,CTAM.idle);}},1500);});
+  /* returning visitor who already reserved on this browser */
+  try{const r=JSON.parse(localStorage.getItem('pixling_reserved')||'null');if(r&&r.n)showReserved(r.n,'',false);}catch(_){}
+  /* preview the confirmed state without submitting: open the page with #preview-reserved */
+  if(location.hash==='#preview-reserved')showReserved('Sam','you@email.com',true);
 }
 
 /* leaving the page */
