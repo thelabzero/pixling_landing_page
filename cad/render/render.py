@@ -45,20 +45,39 @@ body = imp(BODY, 'body'); bezel = imp(BEZEL, 'bezel'); back = imp(BACK, 'back')
 for o in (body, bezel, back):
     o.scale = (S, S, S); o.location = (0, 0, 0)
 # body: front faces +Z in CAD; rotate so front faces -Y, up stays up
-body.rotation_euler = (math.radians(90), math.radians(180), 0)
-bz = body.dimensions  # after scale, before rotation dims are local
-D = 40.64 * S
-# window centre in CAD (relative to bounds centre): x 0, y ~ -3 mm
-win_y = cfg.get('win_y', 3.0) * S
-bezel.rotation_euler = (math.radians(90), math.radians(180), math.radians(cfg.get('bezel_rot', 0)))
-bezel.location = (0, -D / 2 + cfg.get('bezel_inset', 2.0) * S, win_y)
 from mathutils import Matrix
-back.data.transform(Matrix.Rotation(math.radians(cfg.get('back_rot', 90)), 4, 'Z'))
-back.rotation_euler = (math.radians(90), math.radians(180), 0)
-back.location = (0, D / 2 + 2 * S + cfg.get('back_gap', 0) * S, cfg.get('back_y', 0) * S)
-if cfg.get('explode'):
-    e = cfg['explode']
-    bezel.location.y -= e * S; back.location.y += e * S
+def place(o, q):
+    """Explicit placement from assembly_tool.html: mirror(local XYZ) -> spin(local Z) -> Euler XYZ -> position (mm)."""
+    m = q.get('mirror', [0, 0, 0])
+    if any(m):
+        o.data.transform(Matrix.Diagonal([-1 if v else 1 for v in m] + [1]))
+        if sum(1 for v in m if v) % 2: o.data.flip_normals()
+    o.data.transform(Matrix.Rotation(math.radians(q.get('spin', 0)), 4, 'Z'))
+    o.rotation_mode = 'ZYX'  # three.js 'XYZ' (assembly_tool.html) == Blender 'ZYX' with the same x,y,z angles
+    o.rotation_euler = [math.radians(a) for a in q['rot']]
+    o.location = [v * S for v in q['pos']]
+
+D = 40.64 * S
+win_y = cfg.get('win_y', 3.0) * S  # window centre in CAD: x 0, y ~ -3 mm
+if cfg.get('parts'):
+    for o, k in ((body, 'body'), (bezel, 'bezel'), (back, 'back')): place(o, cfg['parts'][k])
+    if cfg.get('explode'):
+        e = cfg['explode']  # optional per-part distances: explode_bezel / explode_back
+        bezel.location.y -= cfg.get('explode_bezel', e) * S; back.location.y += cfg.get('explode_back', e) * S
+else:
+    body.rotation_euler = (math.radians(90), math.radians(180), 0)
+    bz = body.dimensions  # after scale, before rotation dims are local
+    bezel.rotation_euler = (math.radians(90), math.radians(180), math.radians(cfg.get('bezel_rot', 0)))
+    bezel.location = (0, -D / 2 + cfg.get('bezel_inset', 2.0) * S, win_y)
+    back.data.transform(Matrix.Rotation(math.radians(cfg.get('back_rot', 90)), 4, 'Z'))
+    if cfg.get('back_mirror'):  # mirror left/right (local X), port stays at the bottom
+        back.data.transform(Matrix.Scale(-1, 4, (1, 0, 0))); back.data.flip_normals()
+    back.rotation_euler = (math.radians(90), math.radians(180), 0)
+    back.location = (0, D / 2 + 2 * S + cfg.get('back_gap', 0) * S, cfg.get('back_y', 0) * S)
+    if cfg.get('explode'):
+        e = cfg['explode']
+        bezel.location.y -= e * S; back.location.y += e * S
+
 
 body.data.materials.append(pla('body', cfg['body'], matte=cfg.get('matte', True)))
 bezel.data.materials.append(pla('bezel', cfg['bezel'], matte=cfg.get('matte', True)))

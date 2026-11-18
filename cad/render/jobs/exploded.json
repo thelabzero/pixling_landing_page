@@ -2,7 +2,6 @@
  "body": "#1F1D1D",
  "bezel": "#1A1818",
  "back": "#1A1818",
- "back_rot": 90,
  "transparent": true,
  "bg": "#282020",
  "key": 120,
@@ -16,14 +15,73 @@
   1300
  ],
  "samples": 80,
- "az": -62,
+ "az": -38,
  "el": 16,
- "dist": 3.8,
- "explode": 42,
+ "dist": 3.6,
  "target": [
   0,
   0,
-  0
+  0.0
  ],
- "out": "assets/renders/dino_exploded.png"
+ "out": "assets/renders/dino_exploded.png",
+ "parts": {
+  "body": {
+   "rot": [
+    90,
+    0,
+    0
+   ],
+   "spin": -180,
+   "mirror": [
+    0,
+    0,
+    0
+   ],
+   "pos": [
+    0,
+    0,
+    0
+   ]
+  },
+  "bezel": {
+   "rot": [
+    -90,
+    180,
+    0
+   ],
+   "spin": -180,
+   "mirror": [
+    0,
+    0,
+    0
+   ],
+   "pos": [
+    0,
+    15,
+    4.6
+   ]
+  },
+  "back": {
+   "rot": [
+    90,
+    180,
+    0
+   ],
+   "spin": -90,
+   "mirror": [
+    1,
+    0,
+    0
+   ],
+   "pos": [
+    0,
+    -7.9,
+    0.1
+   ]
+  }
+ },
+ "explode": 1,
+ "win_y": 4.6,
+ "explode_bezel": 82,
+ "explode_back": 70
 }
