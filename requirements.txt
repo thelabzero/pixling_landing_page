@@ -1,0 +1,3 @@
+# Optional: only if rendering with Python instead of the Blender app
+bpy>=4.2  # needs Python 3.11+ on macOS arm64 / Linux x86_64 / Windows
+trimesh

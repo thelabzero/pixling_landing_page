@@ -1,0 +1,23 @@
+{
+ "body": "#1F1D1D",
+ "bezel": "#1A1818",
+ "back": "#1A1818",
+ "back_rot": -90,
+ "transparent": true,
+ "bg": "#282020",
+ "key": 120,
+ "fill": 35,
+ "rim": 80,
+ "rim_color": "#FCF8F0",
+ "world": 0.5,
+ "face": "cad/render/faces/face_idle.png",
+ "res": [
+  1400,
+  1400
+ ],
+ "samples": 80,
+ "az": 155,
+ "el": 14,
+ "dist": 2.6,
+ "out": "assets/renders/dino_back.png"
+}

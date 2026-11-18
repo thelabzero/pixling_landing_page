@@ -1,0 +1,28 @@
+{
+ "body": "#1F1D1D",
+ "bezel": "#1A1818",
+ "back": "#1A1818",
+ "back_rot": -90,
+ "transparent": true,
+ "bg": "#282020",
+ "key": 120,
+ "fill": 35,
+ "rim": 80,
+ "rim_color": "#FCF8F0",
+ "world": 0.5,
+ "face": "cad/render/faces/face_happy.png",
+ "res": [
+  1600,
+  1600
+ ],
+ "samples": 96,
+ "az": -28,
+ "el": 12,
+ "dist": 2.6,
+ "target": [
+  0,
+  0,
+  -0.02
+ ],
+ "out": "assets/renders/dino_hero.png"
+}

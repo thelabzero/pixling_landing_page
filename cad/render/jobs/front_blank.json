@@ -1,0 +1,29 @@
+{
+ "body": "#1F1D1D",
+ "bezel": "#1A1818",
+ "back": "#1A1818",
+ "back_rot": -90,
+ "transparent": true,
+ "bg": "#282020",
+ "key": 120,
+ "fill": 35,
+ "rim": 80,
+ "rim_color": "#FCF8F0",
+ "world": 0.5,
+ "face": "cad/render/faces/face_black.png",
+ "glow": 0,
+ "res": [
+  1400,
+  1400
+ ],
+ "samples": 80,
+ "az": 0,
+ "el": 4,
+ "dist": 2.5,
+ "target": [
+  0,
+  0,
+  0
+ ],
+ "out": "assets/renders/dino_front_blank.png"
+}
