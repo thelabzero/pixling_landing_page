@@ -49,14 +49,27 @@ canvas,video{image-rendering:pixelated;image-rendering:crisp-edges;display:block
 .prod .scr>*{width:100%;height:100%;object-fit:contain}
 .ctaimg{width:min(400px,100%);display:block;margin:0 auto -40px}
 
+/* ---------- STICKY TOP BAR ---------- */
+html{scroll-padding-top:68px}
+body{-webkit-tap-highlight-color:transparent}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top);background:rgba(40,32,32,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 2px 0 rgba(252,248,240,0)}
+.topbar.scrolled{box-shadow:0 2px 0 rgba(252,248,240,.07)}
+.tb{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:68px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.tb .l,.tb .r{display:flex;gap:26px;align-items:center}
+.tb .r{justify-content:flex-end}
+.tb .l a:hover,.tb a.lnk:hover{color:var(--cream)}
+.tb .logo{display:block;line-height:0}
+.tbbtn{font-size:13px;padding:4px 4px 4px 14px;gap:10px}
+.tbbtn .arr{width:30px;height:30px}
+
 /* ---------- NAV + HERO ---------- */
-.hero{background:var(--night);color:var(--cream);position:relative;overflow:hidden;padding-bottom:150px}
+.hero{background:var(--night);color:var(--cream);position:relative;overflow:hidden;padding:68px 0 150px}
 nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:28px 0;font-family:var(--mono);font-size:13px;color:var(--muted)}
 nav .l,nav .r{display:flex;gap:28px}
 nav .r{justify-content:flex-end}
 nav a:hover{color:var(--cream)}
 nav .r a.navcta{color:var(--cream);border-bottom:2px solid var(--teal);padding-bottom:2px}
-.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:24px;align-items:center;padding-top:40px;position:relative;z-index:2}
+.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:24px;align-items:center;padding-top:72px;position:relative;z-index:2}
 .hero h1{font-size:clamp(44px,6.4vw,86px);line-height:.98;font-weight:600;letter-spacing:-.035em}
 .hero h1 .sp{color:var(--teal)}
 .hero p.lead{margin-top:26px;max-width:470px;font-size:18px;line-height:1.55;color:var(--sand)}
@@ -104,7 +117,7 @@ section.meet{padding:110px 0 120px}
 .chip span{display:block;font-size:13px;line-height:1.45;color:var(--ink2);margin-top:3px}
 
 /* ---------- BORN ---------- */
-section.born{background:var(--night);color:var(--cream);padding:110px 0 0;position:relative;overflow:hidden}
+section.born{background:var(--night);color:var(--cream);padding:110px 0 120px;position:relative;overflow:hidden}
 .born .head{text-align:center;max-width:760px;margin:0 auto}
 .born h2{font-size:clamp(30px,3.8vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1.1}
 .born .head p{margin-top:16px;color:var(--sand);font-size:16px;line-height:1.6}
@@ -234,20 +247,80 @@ footer a:hover{color:var(--teal)}
   .day-head{flex-direction:column;align-items:flex-start}
   .world{height:260px}
 }
+/* ---------- mobile pass ---------- */
+@media (max-width:920px){
+  html{scroll-padding-top:60px}
+  .hero .stars,.born .stars{display:none}
+  .cta form .btn{justify-content:space-between}
+  .tb{grid-template-columns:auto 1fr;height:60px}
+  .tb .l,.tb a.lnk{display:none}
+  .hero{padding:60px 0 70px}
+  .hero-grid{padding-top:36px;gap:0}
+  .hero h1{font-size:clamp(40px,11vw,56px)}
+  .hero p.lead{font-size:16px;margin-top:18px}
+  .hero .actions{margin-top:26px}
+  .stage{height:auto;width:100%;max-width:420px;margin:12px auto 0}
+  .stage .d2{display:none}
+  .stage .d1{position:relative;width:100%;left:0;bottom:0}
+  .stamp{top:6%;left:0;width:84px;height:84px;font-size:9.5px;gap:4px}
+  .stairs{height:70px}
+  .moment{margin-top:-10px;grid-template-columns:1fr;gap:18px}
+  .mini{width:100%;max-width:340px}
+  .strip{padding:56px 0 32px;gap:18px 12px}
+  section.meet,section.play,section.day,section.inside{padding-top:72px;padding-bottom:72px}
+  section.born{padding:72px 0 80px}
+  section.promise{padding:24px 0 64px}
+  .meet-grid{gap:28px}
+  .meet-vis{grid-template-columns:1fr;gap:14px}
+  .meet-vis .big{padding:0;max-width:360px;margin:0 auto;width:100%}
+  .thumbs{flex-direction:row;justify-content:center;flex-wrap:wrap;gap:8px}
+  .thumbs button canvas{width:52px;height:26px}
+  .chips{margin:22px 0 26px}
+  .stats{flex-direction:column;align-items:flex-start;gap:16px;max-width:340px;margin:32px auto 36px}
+  .film{padding:8px}
+  .play .wrap{display:flex;flex-direction:column}
+  .play-grid{display:contents}
+  .play .eyebrow{order:1}.play h2{order:2}
+  .play .center{order:3;width:100%;max-width:300px;margin:18px auto 0}
+  .play .gestures{order:4;margin-top:22px}
+  .play .hint{order:5;margin:12px 0 8px}
+  .play .pcard{order:6;margin-top:14px}
+  .gestures button{padding:12px 12px;min-height:58px}
+  .day-head .arrows{display:none}
+  .rail{padding:26px 22px 18px;scroll-padding-inline:22px;gap:14px}
+  .dcard{flex:0 0 78vw;max-width:300px}
+  .dcard:nth-child(even){margin-top:0}
+  .inside-grid{gap:28px}
+  .parts{gap:18px}
+  .prom{gap:22px 18px}
+  .cta{padding:32px 20px 0;margin-bottom:40px}
+  .cta .box{flex-wrap:wrap;gap:14px 28px}
+  .cta form{margin:22px 0 20px}
+  .cta .msg{margin:0 0 20px}
+  .ctaimg{width:min(300px,90%);margin-bottom:-24px}
+}
+@media (max-width:380px){
+  .tbbtn{padding-left:10px;font-size:12px}
+  .gestures{grid-template-columns:1fr 1fr;gap:8px}
+}
 @media (prefers-reduced-motion:reduce){.hop{animation:none}}
 </style>
 </head>
 <body>
 
+<!-- ================= STICKY TOP BAR: logo + pre-order always visible ================= -->
+<div class="topbar" id="topbar">
+  <div class="wrap tb">
+    <div class="l"><a href="#meet">what is dino</a><a href="#day">life with dino</a><a href="#inside">what's inside</a></div>
+    <a href="#top" class="logo" aria-label="Pixling, back to top"><canvas id="wordmark" data-fg="#FCF8F0" data-bit="0.5"></canvas></a>
+    <div class="r"><a class="lnk" href="#born">how it's born</a><a class="btn step sm tbbtn" href="#preorder">pre-order <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:12px;height:12px"></canvas></span></a></div>
+  </div>
+</div>
+
 <!-- ================= HERO ================= -->
 <header class="hero" id="top">
   <div class="stars" aria-hidden="true"></div>
   <div class="wrap">
-    <nav>
-      <div class="l"><a href="#meet">what is dino</a><a href="#day">life with dino</a><a href="#inside">what's inside</a></div>
-      <a href="#top" aria-label="Pixling"><canvas id="wordmark" data-fg="#FCF8F0" data-bit="0.5"></canvas></a>
-      <div class="r"><a href="#born">how it's born</a><a class="navcta" href="#preorder">pre-order</a></div>
-    </nav>
 
     <div class="hero-grid">
       <div style="position:relative">
@@ -329,10 +402,6 @@ footer a:hover{color:var(--teal)}
       <video id="film" src="boot_film_wedge_life.mp4" muted autoplay playsinline loop preload="auto"></video>
       <div class="bar"><span>boot film · first power-on</span><button id="replay">replay ↺</button></div>
     </div>
-  </div>
-  <div class="world">
-    <div class="ground" id="ground"></div>
-    <div class="lineup" id="lineup"></div>
   </div>
 </section>
 
@@ -507,16 +576,9 @@ document.querySelectorAll('.stars').forEach(st=>{const pts=[[6,10],[18,4],[30,22
 
 /* ---------- hero stairs: a stepped edge, never a curve ---------- */
 (()=>{const n=12,pts=['0 100%','0 0'];for(let i=1;i<=n;i++){const x=(i/n*100).toFixed(2)+'%',y0=((i-1)/n*70).toFixed(2)+'%',y1=(i/n*70).toFixed(2)+'%';pts.push(x+' '+y0,x+' '+y1);}pts.push('100% 100%');document.getElementById('stairs').style.clipPath='polygon('+pts.join(',')+')';})();
-(()=>{const g=document.getElementById('ground'),n=20,pts=['0 100%'];for(let i=0;i<=n;i++){const y=[0,8,8,0,0,14,14,6,6,0,0,10,10,4,4,0,0,12,12,0,0][i];const x0=(i/n*100)+'%',x1=((i+1)/n*100)+'%';pts.push(x0+' '+y+'px',x1+' '+y+'px');}pts.push('100% 100%');g.style.clipPath='polygon('+pts.join(',')+')';})();
 
-/* ---------- birth lineup: pixel, wake, pixel person, dino ---------- */
-(()=>{const L=document.getElementById('lineup'),cell=window.innerWidth<700?6:10;
-  const items=[['pixel',['##','##'],'01','a pixel'],['wake',Array(8).fill('########'),'02','it wakes'],['person',PERSON,'03','it stands up'],['dino',null,'04','it becomes dino']];
-  items.forEach(([k,rows,n,lab])=>{const it=document.createElement('div');it.className='it';
-    if(rows){const cv=document.createElement('canvas');cv.className='sp';drawRows(cv,rows,'#FCF8F0');cv.style.width=rows[0].length*cell+'px';cv.style.height=rows.length*cell+'px';it.append(cv);it.addEventListener('click',()=>hop(cv));}
-    else{const d=document.createElement('div');d.className='dino';d.dataset.fg='#FCF8F0';d.dataset.screen='scene:idle';d.style.width=24*cell+'px';it.append(d);mountDino(d);}
-    const l=document.createElement('div');l.className='lab';l.innerHTML='<b>'+n+'</b><br>'+lab;it.append(l);L.append(it);});
-  setInterval(()=>{const ds=L.querySelectorAll('.it>canvas,.it>.dino');hop(ds[(Math.random()*ds.length)|0]);},2600);})();
+/* ---------- sticky bar: hairline once the page scrolls ---------- */
+(()=>{const t=document.getElementById('topbar');const f=()=>t.classList.toggle('scrolled',window.scrollY>8);f();addEventListener('scroll',f,{passive:true});})();
 
 /* ---------- film: play when visible ---------- */
 const film=document.getElementById('film');
