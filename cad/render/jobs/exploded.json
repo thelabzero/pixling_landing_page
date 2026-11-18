@@ -2,7 +2,7 @@
  "body": "#1F1D1D",
  "bezel": "#1A1818",
  "back": "#1A1818",
- "back_rot": -90,
+ "back_rot": 90,
  "transparent": true,
  "bg": "#282020",
  "key": 120,
@@ -16,9 +16,9 @@
   1300
  ],
  "samples": 80,
- "az": -38,
+ "az": -62,
  "el": 16,
- "dist": 3.6,
+ "dist": 3.8,
  "explode": 42,
  "target": [
   0,
