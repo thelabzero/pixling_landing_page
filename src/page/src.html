@@ -211,10 +211,16 @@ section.promise{padding:40px 0 100px}
 .cta p{color:var(--sand);margin-top:16px;font-size:15px;line-height:1.6;max-width:420px}
 .cta .box{display:flex;gap:36px;margin-top:26px;font-size:15px}
 .cta .box span{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
-.cta form{display:flex;gap:10px;margin:26px 0 64px;max-width:460px}
-.cta input{flex:1;min-width:0;background:var(--night3);border:0;color:var(--cream);font-family:var(--mono);font-size:14px;padding:0 16px;height:48px}
+.cta form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 64px;max-width:480px}
+.cta form label{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.cta form label i{font-style:normal;color:var(--ink2)}
+.cta form .full{grid-column:1/-1}
+.cta form .consent{font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--muted);margin-top:-2px}
+.cta form .btn{grid-column:1/-1;justify-self:start}
+.cta input{width:100%;min-width:0;background:var(--night3);border:0;color:var(--cream);font-family:var(--mono);font-size:14px;padding:0 16px;height:48px}
 .cta input::placeholder{color:var(--muted)}
 .cta input:focus{outline:2px solid var(--teal)}
+.cta input:user-invalid{outline:2px solid #c9766b}
 .cta .msg{font-family:var(--mono);font-size:12px;color:var(--muted);margin:-50px 0 64px;min-height:14px}
 .cta .pair{display:flex;align-items:flex-end;justify-content:center;gap:26px}
 .cta .pair .a{width:250px;margin-bottom:-26px}
@@ -237,7 +243,7 @@ footer a:hover{color:var(--teal)}
   .prom{grid-template-columns:1fr 1fr}
   .chips{grid-template-columns:1fr}
   .cta{padding:40px 22px 0}
-  .cta form{flex-direction:column}.cta input{flex:none}
+  .cta form{grid-template-columns:1fr}
   .cta .pair .a{width:170px}.cta .pair .b{width:90px}
   .inside-grid{grid-template-columns:1fr;gap:40px}.parts{grid-template-columns:1fr}
   footer{flex-direction:column;gap:16px}
@@ -251,7 +257,8 @@ footer a:hover{color:var(--teal)}
 @media (max-width:920px){
   html{scroll-padding-top:60px}
   .hero .stars,.born .stars{display:none}
-  .cta form .btn{justify-content:space-between}
+  .cta form .btn{justify-content:space-between;justify-self:stretch}
+  .cta input{font-size:16px}
   .tb{grid-template-columns:auto 1fr;height:60px}
   .tb .l,.tb a.lnk{display:none}
   .hero{padding:60px 0 70px}
@@ -478,9 +485,12 @@ footer a:hover{color:var(--teal)}
         <div><span class="mono">colour</span>matte black · more later</div>
         <div><span class="mono">price</span>coming soon</div>
       </div>
-      <!-- TODO: set data-endpoint to your form backend (e.g. Formspree / Google Apps Script / Razorpay link). Until then nothing is stored. -->
-      <form id="wl" data-endpoint="">
-        <input type="email" name="email" placeholder="you@email.com" required aria-label="email">
+      <!-- Submissions go to PostHog as the event pixling_waitlist_submit (see the tracking script at the end of the page). -->
+      <form id="wl">
+        <label><span>name</span><input type="text" name="name" placeholder="your name" required autocomplete="name" maxlength="80"></label>
+        <label><span>email</span><input type="email" name="email" placeholder="you@email.com" required autocomplete="email"></label>
+        <label class="full"><span>mobile <i>optional</i></span><input type="tel" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" inputmode="tel" pattern="[+]?[0-9 ]{10,15}" title="10-digit mobile number, with or without +91"></label>
+        <p class="consent full">We'll only use these to tell you about Dino pre-orders. No spam, no sharing.</p>
         <button class="btn step sm" type="submit">reserve mine <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></button>
       </form>
       <div class="msg" id="wlmsg"></div>
@@ -614,10 +624,112 @@ document.getElementById('replay').onclick=()=>{film.currentTime=0;film.play().ca
   document.querySelector('.arrows .next').onclick=()=>R.scrollBy({left:step(),behavior:'smooth'});
   document.querySelector('.arrows .prev').onclick=()=>R.scrollBy({left:-step(),behavior:'smooth'});})();
 
-/* ---------- waitlist ---------- */
-document.getElementById('wl').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,m=document.getElementById('wlmsg'),ep=f.dataset.endpoint;
-  if(!ep){m.textContent='pre-orders open soon.';return;}
-  try{await fetch(ep,{method:'POST',body:new FormData(f)});m.textContent='reserved. we\'ll write when pre-orders open.';f.reset();}catch(_){m.textContent='that didn\'t go through. try again?';}});
+})();
+</script>
+
+<script>
+/* ---------- Pixling analytics (PostHog, EU). Every event is prefixed pixling_ ---------- */
+(()=>{
+const KEY='phc_r7uQ4FmZCLBTwGvwX2unS8joJxvDANX5d7ex6UYF5ZCx',HOST='https://eu.i.posthog.com';
+const T0=performance.now(),Q=[];let ready=false;
+const host=location.hostname;
+const ENV=/(^|\.)(github\.io|pixling\.[a-z.]+)$/.test(host)?'prod':'dev';
+const q=new URLSearchParams(location.search);
+const UTM={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{if(q.get(k))UTM[k]=q.get(k);});
+let refHost='';try{refHost=document.referrer?new URL(document.referrer).hostname:'';}catch(_){}
+const vw=innerWidth,device=vw<700?'mobile':vw<1100?'tablet':'desktop';
+const sec=()=>Math.round((performance.now()-T0)/100)/10;
+function pxl(name,props){const e='pixling_'+name,p=Object.assign({seconds_since_load:sec()},props||{});
+  if(ready){try{posthog.capture(e,p);}catch(_){}}else if(Q.length<200)Q.push([e,p]);}
+window.pxl=pxl;
+
+const s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';s.src='https://eu-assets.i.posthog.com/static/array.js';
+s.onload=()=>{try{
+  posthog.init(KEY,{api_host:HOST,autocapture:false,capture_pageview:false,capture_pageleave:false,person_profiles:'identified_only',
+    persistence:'localStorage+cookie',session_recording:{maskAllInputs:true},
+    loaded:ph=>{ph.register({pixling_site:'landing',pixling_version:'v1',pixling_env:ENV,pixling_device:device});}});
+  ready=true;Q.splice(0).forEach(([e,p])=>{try{posthog.capture(e,p);}catch(_){}});
+}catch(_){}};
+document.head.appendChild(s);
+
+/* page view */
+pxl('page_view',Object.assign({path:location.pathname,referrer_host:refHost,viewport_w:vw,viewport_h:innerHeight,
+  device_type:device,touch:('ontouchstart' in window),language:navigator.language,dpr:window.devicePixelRatio||1},UTM));
+
+/* first interaction */
+let firstDone=false;
+['pointerdown','keydown','touchstart','scroll'].forEach(t=>addEventListener(t,ev=>{if(firstDone||!ev.isTrusted)return;
+  firstDone=true;pxl('first_interaction',{type:t});},{capture:true,passive:true}));
+
+/* sections reached */
+const SECTIONS=[['top','hero'],['meet','meet'],['born','born'],['play','play'],['day','day'],['inside','inside'],['preorder','preorder']];
+const seen=new Set();
+const sio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const n=e.target.dataset.pxlSection;if(seen.has(n))return;
+  seen.add(n);pxl('section_view',{section:n,order:SECTIONS.findIndex(x=>x[1]===n)+1,sections_seen:seen.size});sio.unobserve(e.target);}),{threshold:.35});
+SECTIONS.forEach(([id,n])=>{const el=document.getElementById(id);if(el){el.dataset.pxlSection=n;sio.observe(el);}});
+const prom=document.querySelector('section.promise');if(prom){prom.dataset.pxlSection='promise';sio.observe(prom);}
+
+/* scroll depth */
+const depths=[25,50,75,90,100],hit=new Set();let maxScroll=0;
+function onScroll(){const h=document.documentElement,tot=h.scrollHeight-innerHeight;if(tot<=0)return;
+  const pc=Math.min(100,Math.round(scrollY/tot*100));maxScroll=Math.max(maxScroll,pc);
+  depths.forEach(d=>{if(pc>=d&&!hit.has(d)){hit.add(d);pxl('scroll_depth',{depth:d});}});}
+addEventListener('scroll',onScroll,{passive:true});
+
+/* engaged time: only counts while the tab is visible */
+let vis=0,last=performance.now();const marks=[15,30,60,120,300],done=new Set();
+setInterval(()=>{const n=performance.now();if(!document.hidden)vis+=(n-last)/1000;last=n;
+  marks.forEach(m=>{if(vis>=m&&!done.has(m)){done.add(m);pxl('engaged_time',{seconds:m});}});},1000);
+
+/* clicks: nav, cta, social, expressions, gestures, dino taps, film, day rail */
+const label=el=>(el.getAttribute('aria-label')||el.textContent||'').replace(/\s+/g,' ').trim().slice(0,60).toLowerCase();
+const where=el=>el.closest('.topbar')?'topbar':el.closest('header.hero')?'hero':el.closest('footer')?'footer':(el.closest('[data-pxl-section]')||{dataset:{}}).dataset.pxlSection||'page';
+document.addEventListener('click',ev=>{if(!ev.isTrusted)return;const t=ev.target;
+  const a=t.closest('a');
+  if(a){const href=a.getAttribute('href')||'';
+    if(href==='#preorder'){pxl('cta_click',{label:label(a),location:where(a)});return;}
+    if(a.closest('.soc')){pxl('social_click',{network:label(a)});return;}
+    if(href.startsWith('#')&&href.length>1){pxl('nav_click',{label:label(a),target:href.slice(1),location:where(a)});return;}}
+  const th=t.closest('#thumbs button');if(th){pxl('expression_select',{expression:label(th),index:[...th.parentNode.children].indexOf(th)});return;}
+  const ge=t.closest('#gestures button');if(ge){const b=ge.querySelector('b');pxl('gesture_select',{gesture:b?b.textContent.toLowerCase():label(ge)});return;}
+  if(t.closest('#replay')){pxl('film_replay');return;}
+  const ar=t.closest('.arrows button');if(ar){pxl('day_rail_nav',{direction:ar.classList.contains('next')?'next':'prev'});return;}
+  const dc=t.closest('.dcard');if(dc){pxl('day_card_tap',{card:label(dc.querySelector('h3,h4,.t')||dc).slice(0,40)});return;}
+  const dino=t.closest('.prod,.dino');if(dino){pxl('dino_tap',{where:dino.id||where(dino)});}
+},true);
+
+/* film */
+const film=document.getElementById('film');
+if(film)film.addEventListener('playing',()=>pxl('film_play'),{once:true});
+
+/* day rail: how far people swipe */
+const rail=document.getElementById('rail');let railMax=0;
+if(rail)rail.addEventListener('scroll',()=>{const p=Math.round(rail.scrollLeft/(rail.scrollWidth-rail.clientWidth||1)*100);
+  [50,100].forEach(d=>{if(p>=d&&railMax<d){railMax=d;pxl('day_rail_scroll',{depth:d});}});},{passive:true});
+
+/* waitlist form */
+const wl=document.getElementById('wl'),msg=document.getElementById('wlmsg');
+if(wl){let started=false,t0=0;const filled=new Set();
+  wl.addEventListener('focusin',e=>{if(!started&&e.target.name){started=true;t0=performance.now();pxl('form_start',{first_field:e.target.name});}});
+  wl.addEventListener('change',e=>{const n=e.target.name;if(n&&e.target.value&&!filled.has(n)){filled.add(n);pxl('form_field_complete',{field:n});}});
+  wl.addEventListener('invalid',e=>{pxl('form_validation_error',{field:e.target.name,type:Object.keys(e.target.validity).find(k=>e.target.validity[k]&&k!=='valid')||'invalid'});},true);
+  wl.addEventListener('submit',e=>{e.preventDefault();
+    const d=Object.fromEntries(new FormData(wl)),name=(d.name||'').trim(),email=(d.email||'').trim().toLowerCase(),mobile=(d.mobile||'').trim();
+    pxl('waitlist_submit',Object.assign({name,email,mobile,has_mobile:!!mobile,consent_text:'v1-preorder-updates-only',
+      seconds_to_submit:started?Math.round((performance.now()-t0)/100)/10:null,max_scroll_pct:maxScroll},UTM));
+    try{if(ready)posthog.identify(email,{email,name,mobile:mobile||undefined,pixling_waitlist:true});}catch(_){}
+    msg.textContent='reserved. we\'ll write when pre-orders open.';wl.reset();started=false;filled.clear();});
+}
+
+/* leaving the page */
+let sent=false;
+function leave(){if(sent)return;sent=true;pxl('page_leave',{seconds_visible:Math.round(vis),max_scroll_pct:maxScroll,sections_seen:seen.size,
+  reached_preorder:seen.has('preorder')});}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)leave();else sent=false;});
+addEventListener('pagehide',leave);
+
+/* js errors (max 5) */
+let errs=0;addEventListener('error',e=>{if(errs++<5)pxl('js_error',{message:String(e.message).slice(0,160),source:String(e.filename||'').split('/').pop()});});
 })();
 </script>
 </body>
