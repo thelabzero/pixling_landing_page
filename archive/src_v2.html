@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dino by Pixling · a tiny friend, alive in pixels</title>
+<meta name="description" content="Dino is the first Pixling: a little desk monster with a screen for a face. It blinks, peeks, gets sleepy, and shows you the time on a double-tap.">
+<style>
+/*FONTS*/
+:root{
+  --night:#282020; --night2:#1E1818; --night3:#3A3030; --cream:#FCF8F0; --paper:#F4EEE5; --sand:#E6DED4;
+  --muted:#A69C94; --ink2:#6E645C; --teal:#2F9083; --screen:#C7EAFF;
+  --sans:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --wrap:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--night);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+canvas,video{image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 40px}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:13px;color:var(--teal);letter-spacing:.02em}
+.muted{color:var(--ink2)}
+
+/* stepped corners: brand says corners are stepped, never rounded */
+.step{--s:6px;clip-path:polygon(0 calc(var(--s)*2),var(--s) calc(var(--s)*2),var(--s) var(--s),calc(var(--s)*2) var(--s),calc(var(--s)*2) 0,calc(100% - var(--s)*2) 0,calc(100% - var(--s)*2) var(--s),calc(100% - var(--s)) var(--s),calc(100% - var(--s)) calc(var(--s)*2),100% calc(var(--s)*2),100% calc(100% - var(--s)*2),calc(100% - var(--s)) calc(100% - var(--s)*2),calc(100% - var(--s)) calc(100% - var(--s)),calc(100% - var(--s)*2) calc(100% - var(--s)),calc(100% - var(--s)*2) 100%,calc(var(--s)*2) 100%,calc(var(--s)*2) calc(100% - var(--s)),var(--s) calc(100% - var(--s)),var(--s) calc(100% - var(--s)*2),0 calc(100% - var(--s)*2))}
+.step.lg{--s:12px}
+.step.sm{--s:4px}
+
+/* button: cream pill with a teal spark */
+.btn{display:inline-flex;align-items:center;gap:14px;background:var(--cream);color:var(--night);font-family:var(--mono);font-size:14px;font-weight:500;padding:6px 6px 6px 20px;border:0;cursor:pointer;transition:transform .12s steps(2)}
+.btn .arr{width:36px;height:36px;background:var(--teal);display:grid;place-items:center}
+.btn:hover{transform:translateY(-2px)}
+.btn.dark{background:var(--night);color:var(--cream)}
+
+/* dino sprite + screen */
+.dino{position:relative;width:100%}
+.dino .scr{position:absolute;background:#000;overflow:hidden}
+.dino .scr>*{width:100%;height:100%;object-fit:contain}
+.dino .body{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hop{animation:hop .4s steps(1) 1}
+@keyframes hop{0%{transform:scale(1.04,.92) translateY(4%)}25%,70%{transform:translateY(calc(-2/23*100%))}100%{transform:none}}
+
+/* product render with a live screen */
+.prod{position:relative;width:100%}
+.prod img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none}
+.prod .scr{position:absolute;left:34.86%;top:38.81%;width:30.34%;height:15.14%;background:#000;overflow:hidden}
+.prod .scr>*{width:100%;height:100%;object-fit:contain}
+.ctaimg{width:min(400px,100%);display:block;margin:0 auto -40px}
+
+/* ---------- STICKY TOP BAR ---------- */
+html{scroll-padding-top:68px}
+body{-webkit-tap-highlight-color:transparent}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top);background:rgba(40,32,32,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 2px 0 rgba(252,248,240,0)}
+.topbar.scrolled{box-shadow:0 2px 0 rgba(252,248,240,.07)}
+.tb{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:68px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.tb .l,.tb .r{display:flex;gap:26px;align-items:center}
+.tb .r{justify-content:flex-end}
+.tb .l a:hover,.tb a.lnk:hover{color:var(--cream)}
+.tb .logo{display:block;line-height:0}
+.tbbtn{font-size:13px;padding:4px 4px 4px 14px;gap:10px}
+.tbbtn .arr{width:30px;height:30px}
+
+/* ---------- NAV + HERO ---------- */
+.hero{background:var(--night);color:var(--cream);position:relative;overflow:hidden;padding:68px 0 150px}
+nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:28px 0;font-family:var(--mono);font-size:13px;color:var(--muted)}
+nav .l,nav .r{display:flex;gap:28px}
+nav .r{justify-content:flex-end}
+nav a:hover{color:var(--cream)}
+nav .r a.navcta{color:var(--cream);border-bottom:2px solid var(--teal);padding-bottom:2px}
+.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:24px;align-items:center;padding-top:72px;position:relative;z-index:2}
+.hero h1{font-size:clamp(44px,6.4vw,86px);line-height:.98;font-weight:600;letter-spacing:-.035em}
+.hero h1 .sp{color:var(--teal)}
+.hero p.lead{margin-top:26px;max-width:470px;font-size:18px;line-height:1.55;color:var(--sand)}
+.hero .actions{margin-top:34px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.hero .actions a.watch{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.hero .actions a.watch:hover{color:var(--cream)}
+.stamp{position:absolute;left:-10px;top:40px;width:112px;height:112px;background:var(--night3);color:var(--cream);transform:rotate(-8deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-family:var(--mono);font-size:11px;line-height:1.35;text-align:center;z-index:3}
+.stamp canvas{width:21px;height:18px}
+.stage{position:relative;height:560px}
+.stage .d1{position:absolute;width:min(560px,110%);left:-8%;bottom:-150px;z-index:2}
+.stage .d2{position:absolute;width:300px;right:-70px;top:-10px;z-index:1}
+.stars i{position:absolute;width:6px;height:6px;background:var(--cream);opacity:.55}
+.stars i.t{background:var(--teal);opacity:1}
+.stairs{position:absolute;left:0;right:0;bottom:0;height:150px;background:var(--cream);z-index:1}
+
+/* ---------- MOMENT ---------- */
+.moment{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;margin-top:-96px;position:relative;z-index:4;max-width:620px}
+.moment h3{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.moment p{margin-top:8px;font-size:14px;line-height:1.6;color:var(--ink2);max-width:330px}
+.mini{background:var(--night);padding:12px;width:240px}
+.mini .s{background:#000;aspect-ratio:2/1}
+.mini .s canvas{width:100%;height:100%}
+.mini .cap{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:9px}
+
+/* ---------- ICON STRIP ---------- */
+.strip{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:88px 0 40px;border-bottom:2px solid var(--sand)}
+.strip div{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:14px;color:var(--ink2)}
+.strip canvas{width:32px;height:32px}
+
+/* ---------- MEET ---------- */
+section.meet{padding:110px 0 120px}
+.meet-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:center}
+.meet-vis{display:grid;grid-template-columns:1fr 84px;gap:22px;align-items:center}
+.meet-vis .big{position:relative;padding:20px 10px 0}
+.thumbs{display:flex;flex-direction:column;gap:12px}
+.thumbs button{background:var(--paper);border:0;padding:8px;cursor:pointer;display:flex;flex-direction:column;gap:6px;align-items:center;font-family:var(--mono);font-size:10px;color:var(--ink2)}
+.thumbs button canvas{width:64px;height:32px;background:#000}
+.thumbs button.on{background:var(--night);color:var(--cream)}
+.meet h2{font-size:clamp(34px,4vw,48px);font-weight:600;letter-spacing:-.03em;margin-top:10px}
+.meet p.body{margin-top:18px;font-size:16px;line-height:1.65;color:var(--ink2);max-width:520px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:30px 0 34px}
+.chip{background:var(--paper);padding:16px 16px;display:flex;gap:14px;align-items:flex-start}
+.chip canvas{width:32px;height:32px;flex:none}
+.chip b{display:block;font-size:14px;font-weight:600}
+.chip span{display:block;font-size:13px;line-height:1.45;color:var(--ink2);margin-top:3px}
+
+/* ---------- BORN ---------- */
+section.born{background:var(--night);color:var(--cream);padding:110px 0 120px;position:relative;overflow:hidden}
+.born .head{text-align:center;max-width:760px;margin:0 auto}
+.born h2{font-size:clamp(30px,3.8vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.born .head p{margin-top:16px;color:var(--sand);font-size:16px;line-height:1.6}
+.stats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin:40px 0 56px}
+.stat{display:flex;gap:14px;align-items:center}
+.stat .ic{width:52px;height:52px;background:var(--night3);display:grid;place-items:center}
+.stat .ic canvas{width:32px;height:32px}
+.stat b{display:block;font-size:15px;font-weight:600}
+.stat span{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:2px}
+.film{position:relative;max-width:900px;margin:0 auto;background:var(--night2);padding:18px}
+.film video{width:100%;aspect-ratio:2/1;background:#000}
+.film .bar{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);padding:12px 4px 0}
+.film .bar button{background:none;border:0;color:var(--cream);font:inherit;cursor:pointer}
+.film .bar button:hover{color:var(--teal)}
+.world{position:relative;height:330px;margin-top:70px}
+.ground{position:absolute;left:0;right:0;bottom:0;height:120px;background:var(--night3)}
+.lineup{position:absolute;left:0;right:0;bottom:120px;display:flex;justify-content:center;align-items:flex-end;gap:clamp(18px,5vw,70px)}
+.lineup .it{display:flex;flex-direction:column;align-items:center}
+.lineup .it canvas.sp{image-rendering:pixelated}
+.lineup .lab{position:absolute;bottom:-62px;font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap;text-align:center;line-height:1.5}
+.lineup .lab b{color:var(--teal);font-weight:500}
+.lineup .it{position:relative}
+
+/* ---------- PLAY ---------- */
+section.play{background:var(--sand);padding:110px 0 90px;position:relative;overflow:hidden}
+.play h2{text-align:center;font-size:clamp(38px,5.6vw,74px);font-weight:600;letter-spacing:-.04em;line-height:1.02;max-width:980px;margin:0 auto;position:relative;z-index:1}
+.play .sub{text-align:center;margin:18px auto 0;max-width:560px;color:var(--ink2);font-size:16px;line-height:1.6}
+.play-grid{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:32px;align-items:end;margin-top:30px}
+.pcard{background:var(--paper);padding:18px}
+.pcard .s{background:#000;aspect-ratio:2/1}
+.pcard .s canvas{width:100%;height:100%}
+.pcard b{display:block;margin-top:14px;font-size:16px;font-weight:600}
+.pcard span{display:block;font-size:13px;color:var(--ink2);line-height:1.5;margin-top:4px}
+.pcard .t{font-family:var(--mono);font-size:11px;color:var(--teal);margin-top:10px}
+.play .center{position:relative;z-index:2;margin-top:-40px}
+.gestures{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:56px}
+.gestures button{background:rgba(40,32,32,.06);border:0;padding:14px 16px;text-align:left;cursor:pointer;font-family:var(--sans);color:var(--night);transition:background .1s steps(1)}
+.gestures button b{display:block;font-family:var(--mono);font-size:13px;font-weight:500}
+.gestures button span{display:block;font-size:13px;color:var(--ink2);margin-top:4px}
+.gestures button:hover,.gestures button.on{background:var(--night);color:var(--cream)}
+.gestures button:hover span,.gestures button.on span{color:var(--muted)}
+.play .hint{text-align:center;font-family:var(--mono);font-size:12px;color:var(--ink2);margin-top:16px}
+
+/* ---------- DAY ---------- */
+section.day{padding:110px 0 70px}
+.day-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+.day h2{font-size:clamp(30px,3.8vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1.1;margin-top:10px}
+.arrows{display:flex;gap:10px}
+.arrows button{width:46px;height:46px;border:0;background:var(--sand);cursor:pointer;display:grid;place-items:center}
+.arrows button.next{background:var(--night)}
+.arrows button:hover{background:var(--teal)}
+.rail{--pad:max(40px,calc((100vw - var(--wrap))/2 + 40px));display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:var(--pad);padding:40px var(--pad) 30px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.dcard{flex:0 0 270px;scroll-snap-align:start;background:var(--paper);padding:16px 16px 20px}
+.dcard:nth-child(even){margin-top:34px}
+.dcard .s{background:var(--night);padding:10px}
+.dcard .s canvas{width:100%;aspect-ratio:2/1;background:#000}
+.dcard .tm{font-family:var(--mono);font-size:12px;color:var(--teal);margin-top:16px}
+.dcard b{display:block;font-size:17px;font-weight:600;margin-top:4px}
+.dcard span{display:block;font-size:13px;line-height:1.5;color:var(--ink2);margin-top:6px}
+.dcard .tr{font-family:var(--mono);font-size:11px;color:var(--ink2);margin-top:12px;padding-top:10px;border-top:2px solid var(--sand)}
+.soon{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.04em;background:var(--teal);color:var(--cream);padding:2px 6px;margin-left:6px;vertical-align:2px}
+.dcard.later .s canvas{opacity:.45}
+.note{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+/* ---------- INSIDE ---------- */
+section.inside{background:var(--night);color:var(--cream);padding:110px 0}
+.inside-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.xray-wrap{display:flex;justify-content:center}
+.xray{position:relative;width:min(400px,100%)}
+.xray .mk{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;background:var(--teal);color:var(--cream);font-family:var(--mono);font-size:12px;display:grid;place-items:center;z-index:3}
+.inside h2{font-size:clamp(30px,3.8vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1.1;margin-top:12px}
+.inside p.lead{margin-top:14px;color:var(--sand);font-size:16px;line-height:1.6}
+.parts{list-style:none;margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:22px 28px}
+.parts li{display:flex;gap:14px;align-items:flex-start}
+.parts .n{flex:none;width:24px;height:24px;background:var(--teal);font-family:var(--mono);font-size:12px;display:grid;place-items:center}
+.parts .n.x{background:var(--night3)}
+.parts b{display:block;font-size:15px;font-weight:600}
+.parts li span:not(.n){display:block;font-size:13px;line-height:1.55;color:var(--muted);margin-top:4px}
+
+/* ---------- V2: hero trust line ---------- */
+.hero-trust{margin-top:22px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+/* ---------- V2: what it does ---------- */
+section.does{padding:70px 0 90px}
+.does h2,.trust h2{font-size:clamp(30px,3.8vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1.1;margin-top:10px}
+.does-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+.job{background:var(--paper);padding:18px 18px 22px}
+.job .s{background:var(--night);padding:10px}
+.job .s canvas{width:100%;aspect-ratio:2/1;background:#000}
+.job b{display:block;font-size:20px;font-weight:600;margin-top:18px}
+.job p{font-size:14px;line-height:1.6;color:var(--ink2);margin-top:8px}
+.job .how{font-family:var(--mono);font-size:12px;color:var(--teal);margin-top:14px}
+.later{font-family:var(--mono);font-size:12px;color:var(--ink2);margin-top:20px}
+.later a{color:var(--teal)}
+/* ---------- V2: trust ---------- */
+section.trust{padding:100px 0 90px}
+.trust-grid{display:block;margin-top:34px;max-width:980px}
+.proto{background:var(--night);padding:12px 12px 14px;margin:0}
+.proto img{display:block;width:100%;height:auto}
+.proto figcaption{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px}
+.tpoints{display:grid;grid-template-columns:1fr 1fr;gap:28px 32px}
+.tp b{display:block;font-size:18px;font-weight:600}
+.tp p{font-size:14px;line-height:1.6;color:var(--ink2);margin-top:8px}
+.tp:nth-child(2){grid-column:1/-1}
+.status{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;margin-top:10px}
+.status .tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 7px}
+.status .tag.ok{background:var(--night);color:var(--cream)}
+.status .tag.later{background:var(--teal);color:var(--cream)}
+.faq{margin-top:64px;border-top:2px solid var(--sand);padding-top:30px;max-width:860px}
+.faq h3{font-size:22px;font-weight:600;margin-bottom:10px}
+.faq details{border-bottom:2px solid var(--sand)}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-size:16px;font-weight:600;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font-family:var(--mono);color:var(--teal)}
+.faq details[open] summary:after{content:"–"}
+.faq details p{font-size:15px;line-height:1.6;color:var(--ink2);padding:0 0 18px;max-width:680px}
+
+/* ---------- PROMISE ---------- */
+section.promise{padding:40px 0 100px}
+.prom{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;border-top:2px solid var(--sand);padding-top:36px;margin-top:22px}
+.prom b{display:block;font-size:18px;font-weight:600;margin-top:8px}
+.prom p{font-size:14px;line-height:1.6;color:var(--ink2);margin-top:8px}
+
+/* ---------- CTA ---------- */
+.cta{background:var(--night);color:var(--cream);display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:end;padding:64px 64px 0;position:relative;overflow:hidden;margin-bottom:60px}
+.cta h2{font-size:clamp(30px,3.6vw,44px);font-weight:600;letter-spacing:-.03em;line-height:1.1}
+.cta h2 .sp{color:var(--teal)}
+.cta p{color:var(--sand);margin-top:16px;font-size:15px;line-height:1.6;max-width:420px}
+.cta .box{display:flex;gap:36px;margin-top:26px;font-size:15px}
+.cta .box span{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.cta form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 64px;max-width:480px}
+.cta form label{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.cta form label i{font-style:normal;color:var(--ink2)}
+.cta form .full{grid-column:1/-1}
+.cta form .consent{font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--muted);margin-top:-2px}
+.cta form .btn{grid-column:1/-1;justify-self:start}
+.cta input{width:100%;min-width:0;background:var(--night3);border:0;color:var(--cream);font-family:var(--mono);font-size:14px;padding:0 16px;height:48px}
+.cta input::placeholder{color:var(--muted)}
+.cta input:focus{outline:2px solid var(--teal)}
+.cta input:user-invalid{outline:2px solid #c9766b}
+.cta .msg{font-family:var(--mono);font-size:12px;color:var(--muted);margin:-50px 0 64px;min-height:14px}
+.cta .pair{display:flex;align-items:flex-end;justify-content:center;gap:26px}
+.cta .pair .a{width:250px;margin-bottom:-26px}
+.cta .pair .b{width:120px;margin-bottom:24px}
+.cta .pair .lab{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+
+footer{display:flex;justify-content:space-between;align-items:center;padding:0 0 40px;font-family:var(--mono);font-size:12px;color:var(--ink2)}
+footer .soc{display:flex;gap:18px}
+footer a:hover{color:var(--teal)}
+
+@media (max-width:920px){
+  .wrap{padding:0 22px}
+  nav{grid-template-columns:1fr auto}nav .l{display:none}
+  .hero-grid,.meet-grid,.cta{grid-template-columns:1fr}
+  .stage{height:420px}.stage .d1{width:min(420px,100%);left:0;bottom:-90px}.stage .d2{width:190px;right:-10px}
+  .stamp{left:0;top:10px;width:92px;height:92px;font-size:10px}
+  .moment{grid-template-columns:1fr;margin-top:-60px}
+  .play-grid{grid-template-columns:1fr}.play .center{width:100%;order:-1;margin-top:10px;max-width:340px;margin-left:auto;margin-right:auto}
+  .gestures{grid-template-columns:repeat(2,1fr)}
+  .prom{grid-template-columns:1fr 1fr}
+  .chips{grid-template-columns:1fr}
+  .cta{padding:40px 22px 0}
+  .cta form{grid-template-columns:1fr}
+  .cta .pair .a{width:170px}.cta .pair .b{width:90px}
+  .inside-grid{grid-template-columns:1fr;gap:40px}.parts{grid-template-columns:1fr}
+  footer{flex-direction:column;gap:16px}
+  nav .r a:not(.navcta){display:none}
+  .lineup .lab{font-size:10px;bottom:-56px}
+  .strip{display:grid;grid-template-columns:1fr 1fr}
+  .day-head{flex-direction:column;align-items:flex-start}
+  .world{height:260px}
+}
+/* ---------- mobile pass ---------- */
+@media (max-width:920px){
+  html{scroll-padding-top:60px}
+  .hero .stars,.born .stars{display:none}
+  .cta form .btn{justify-content:space-between;justify-self:stretch}
+  .cta input{font-size:16px}
+  .tb{grid-template-columns:auto 1fr;height:60px}
+  .tb .l,.tb a.lnk{display:none}
+  .hero{padding:60px 0 70px}
+  .hero-grid{padding-top:36px;gap:0}
+  .hero h1{font-size:clamp(40px,11vw,56px)}
+  .hero p.lead{font-size:16px;margin-top:18px}
+  .hero .actions{margin-top:26px}
+  .stage{height:auto;width:100%;max-width:420px;margin:12px auto 0}
+  .stage .d2{display:none}
+  .stage .d1{position:relative;width:100%;left:0;bottom:0}
+  .stamp{top:6%;left:0;width:84px;height:84px;font-size:9.5px;gap:4px}
+  .stairs{height:70px}
+  .moment{margin-top:-10px;grid-template-columns:1fr;gap:18px}
+  .mini{width:100%;max-width:340px}
+  .strip{padding:56px 0 32px;gap:18px 12px}
+  section.meet,section.play,section.day,section.inside{padding-top:72px;padding-bottom:72px}
+  section.born{padding:72px 0 80px}
+  section.promise{padding:24px 0 64px}
+  .meet-grid{gap:28px}
+  .meet-vis{grid-template-columns:1fr;gap:14px}
+  .meet-vis .big{padding:0;max-width:360px;margin:0 auto;width:100%}
+  .thumbs{flex-direction:row;justify-content:center;flex-wrap:wrap;gap:8px}
+  .thumbs button canvas{width:52px;height:26px}
+  .chips{margin:22px 0 26px}
+  .stats{flex-direction:column;align-items:flex-start;gap:16px;max-width:340px;margin:32px auto 36px}
+  .film{padding:8px}
+  .play .wrap{display:flex;flex-direction:column}
+  .play-grid{display:contents}
+  .play .eyebrow{order:1}.play h2{order:2}
+  .play .center{order:3;width:100%;max-width:300px;margin:18px auto 0}
+  .play .gestures{order:4;margin-top:22px}
+  .play .hint{order:5;margin:12px 0 8px}
+  .play .pcard{order:6;margin-top:14px}
+  .gestures button{padding:12px 12px;min-height:58px}
+  .day-head .arrows{display:none}
+  .rail{padding:26px 22px 18px;scroll-padding-inline:22px;gap:14px}
+  .dcard{flex:0 0 78vw;max-width:300px}
+  .dcard:nth-child(even){margin-top:0}
+  .inside-grid{gap:28px}
+  .parts{gap:18px}
+  .prom{gap:22px 18px}
+  .cta{padding:32px 20px 0;margin-bottom:40px}
+  .cta .box{flex-wrap:wrap;gap:14px 28px}
+  .cta form{margin:22px 0 20px}
+  .cta .msg{margin:0 0 20px}
+  .ctaimg{width:min(300px,90%);margin-bottom:-24px}
+}
+@media (max-width:920px){
+  section.does{padding:56px 0 64px}
+  .does-grid{grid-template-columns:1fr;gap:14px;margin-top:24px}
+  section.trust{padding:72px 0 64px}
+  .trust-grid{grid-template-columns:1fr;gap:28px}
+  .proto{max-width:420px}
+  .tpoints{grid-template-columns:1fr;gap:22px}
+  .status{grid-template-columns:1fr;gap:12px}
+  .faq{margin-top:44px}
+}
+@media (max-width:380px){
+  .tbbtn{padding-left:10px;font-size:12px}
+  .gestures{grid-template-columns:1fr 1fr;gap:8px}
+}
+@media (prefers-reduced-motion:reduce){.hop{animation:none}}
+</style>
+</head>
+<body>
+
+<!-- ================= STICKY TOP BAR: logo + pre-order always visible ================= -->
+<div class="topbar" id="topbar">
+  <div class="wrap tb">
+    <div class="l"><a href="#does">what it does</a><a href="#why">why dino</a><a href="#trust">faq</a></div>
+    <a href="#top" class="logo" aria-label="Pixling, back to top"><canvas id="wordmark" data-fg="#FCF8F0" data-bit="0.5"></canvas></a>
+    <div class="r"><a class="lnk" href="#day">a day with dino</a><a class="btn step sm tbbtn" href="#preorder">pre-order <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:12px;height:12px"></canvas></span></a></div>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="wrap">
+
+    <div class="hero-grid">
+      <div style="position:relative">
+        <div class="eyebrow">dino · the first pixling</div>
+        <h1 style="margin-top:18px">A tiny friend for your desk, alive in pixels<span class="sp">.</span></h1>
+        <p class="lead">Dino is a palm-sized desk companion with a screen for a face. Double-tap for the time, flip it face-down for a focus timer, and watch it react when you pet, tilt or pick it up.</p>
+        <div class="actions">
+          <a class="btn step sm" href="#preorder">pre-order dino <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></a>
+          <a class="watch" href="#does">see what it does ↓</a>
+        </div>
+        <div class="hero-trust">free to reserve · no app · no camera or mic</div>
+      </div>
+      <div class="stage">
+        <div class="stamp step sm" aria-label="no app, no camera, no mic"><canvas id="heart" width="7" height="6"></canvas>no app<br>no camera<br>no mic</div>
+        <div class="prod d2"><img src="assets/web/dino_back.webp" alt="Dino from the back" loading="eager"></div>
+        <div class="prod d1" data-screen="video"><img src="assets/web/dino_front_blank.webp" alt="Dino, front view" loading="eager"></div>
+      </div>
+    </div>
+      </div>
+  <div class="stairs" id="stairs" aria-hidden="true"></div>
+</header>
+
+<main>
+<!-- ================= 01 WHAT IT DOES ================= -->
+<section class="does" id="does">
+  <div class="wrap">
+    <div class="eyebrow">01 · what dino does</div>
+    <h2>Three things, done well.</h2>
+    <div class="does-grid">
+      <div class="job step"><div class="s step sm"><canvas data-scene="time"></canvas></div><b>Tells the time</b><p>Double-tap and the face steps aside for a clock. Alarm and stopwatch are built in.</p><div class="how">double-tap</div></div>
+      <div class="job step"><div class="s step sm"><canvas data-scene="focus" data-delay="400"></canvas></div><b>Keeps you focused</b><p>Flip it face-down to start a 25, 45 or 60-minute focus session. A short breathing break follows.</p><div class="how">flip face-down</div></div>
+      <div class="job step"><div class="s step sm"><canvas data-scene="pet" data-delay="800"></canvas></div><b>Reacts to you</b><p>Pet it, tilt it, shake it or pick it up, and it answers with one of 24 expressions.</p><div class="how">hold · tilt · shake</div></div>
+    </div>
+    <div class="later">coming in a later update: tiny games · friends by bump · <a href="#trust">what's ready today →</a></div>
+  </div>
+</section>
+
+<!-- ================= PLAY ================= -->
+<section class="play" id="play">
+  <div class="wrap">
+    <div class="eyebrow" style="text-align:center">02 · try it yourself</div>
+    <h2 style="margin-top:14px">Tap a gesture. Watch Dino react.</h2>
+    <div class="play-grid">
+      <div class="pcard step"><div class="s"><canvas data-scene="rawr" data-delay="600"></canvas></div><b>A tiny rawr</b><span>Every few minutes it does a little rawr, just for you.</span><div class="t">idle quirk · every 2–4 min</div></div>
+      <div class="center"><div class="prod" id="playDino" data-screen="scene:idle"><img src="assets/web/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
+      <div class="pcard step"><div class="s"><canvas data-scene="sleep" data-delay="2500"></canvas></div><b>It gets sleepy</b><span>Leave it alone and it dozes off. Any touch wakes it.</span><div class="t">no input for 5 min</div></div>
+    </div>
+    <div class="gestures" id="gestures"></div>
+    <div class="hint">pick a gesture to try it on the dino above</div>
+  </div>
+</section>
+
+<!-- ================= 03 WHY: benefits ================= -->
+<section class="meet" id="why">
+  <div class="wrap meet-grid">
+    <div class="meet-vis">
+      <div class="big"><div class="prod" id="meetDino" data-screen="expr:0"><img src="assets/web/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+    <div>
+      <div class="eyebrow">03 · why you'll love it</div>
+      <h2>Your desk, a little happier.</h2>
+      <p class="body">Dino is about 7.5 cm tall, with a 128 × 64 screen for a face. It is made for the small moments in a workday, and it never asks for anything back.</p>
+      <div class="chips">
+        <div class="chip step sm"><canvas data-icon="clock"></canvas><div><b>Look up from your phone</b><span>Check the time or start a focus session without unlocking your phone and getting pulled into notifications.</span></div></div>
+        <div class="chip step sm"><canvas data-icon="focus"></canvas><div><b>Focus that feels friendly</b><span>A timer with a face, and a breathing break when you finish.</span></div></div>
+        <div class="chip step sm"><canvas data-icon="leaf"></canvas><div><b>A small moment of joy</b><span>It greets you, does a tiny rawr now and then, and dozes off when you leave.</span></div></div>
+        <div class="chip step sm"><canvas data-icon="chat"></canvas><div><b>A conversation starter</b><span>Someone always leans over and asks: wait… what is that?</span></div></div>
+      </div>
+      <a class="btn dark step sm" href="#preorder">pre-order dino <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DAY ================= -->
+<section class="day" id="day">
+  <div class="wrap day-head">
+    <div><div class="eyebrow">04 · life with dino</div><h2>From the morning alarm<br>to a sleepy goodnight.</h2></div>
+    <div class="arrows"><button class="prev" aria-label="previous"><canvas class="px-arrow l" data-fg="#282020" width="7" height="7" style="width:14px;height:14px"></canvas></button><button class="next" aria-label="next"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></button></div>
+  </div>
+  <div class="rail" id="rail"></div>
+  <div class="wrap note">times are an example day · every screen is the real 128 × 64 frame · games and friends are planned for a later update</div>
+</section>
+
+<!-- ================= BORN ================= -->
+<section class="born" id="born">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">05 · how a pixling is born</div>
+      <h2 style="margin-top:12px">Every Pixling starts as a single pixel.</h2>
+      <p>The pixel wakes, stands up, and becomes Dino. It's the first thing you see when you switch it on.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="ic step sm"><canvas data-icon="settings" data-fg="#FCF8F0"></canvas></div><div><b>128 × 64 screen</b><span>1-bit, every frame drawn by hand</span></div></div>
+      <div class="stat"><div class="ic step sm"><canvas data-icon="chat" data-fg="#FCF8F0"></canvas></div><div><b>24 expressions</b><span>one face, many moods</span></div></div>
+      <div class="stat"><div class="ic step sm"><canvas data-icon="leaf" data-fg="#FCF8F0"></canvas></div><div><b>No camera, no mic</b><span>a companion, not a sensor</span></div></div>
+    </div>
+    <div class="film step">
+      <video id="film" src="boot_film_wedge_life.mp4" muted autoplay playsinline loop preload="auto"></video>
+      <div class="bar"><span>boot film · first power-on</span><button id="replay">replay ↺</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INSIDE ================= -->
+<section class="inside" id="inside">
+  <div class="wrap inside-grid">
+    <div class="xray-wrap">
+      <img src="assets/web/dino_exploded.webp" alt="Dino exploded view: back plate, body and screen bezel" loading="lazy" style="width:100%;display:block">
+    </div>
+    <div>
+      <div class="eyebrow">06 · what's inside</div>
+      <h2>Three printed parts. A tiny computer inside.</h2>
+      <p class="lead">A body, a screen bezel and a back plate, printed in matte PLA. Inside: everything Dino needs to notice you, and nothing that watches you.</p>
+      <ol class="parts">
+        <li><span class="n">1</span><div><b>A 128 × 64 screen</b><span>1-bit and crisp. Every face and number is drawn pixel by pixel, and the clock shifts a pixel every few minutes to protect the screen.</span></div></li>
+        <li><span class="n">2</span><div><b>Touch</b><span>Tap, double-tap, hold to pet, long press for the menu.</span></div></li>
+        <li><span class="n">3</span><div><b>Motion sensing</b><span>It feels tilts, shakes, flips and being picked up.</span></div></li>
+        <li><span class="n">4</span><div><b>Rechargeable battery</b><span>Dino lets you know when it's running low.</span></div></li>
+        <li><span class="n">5</span><div><b>USB-C charging</b><span>The cable comes in the box.</span></div></li>
+        <li><span class="n x">×</span><div><b>No camera, no microphone</b><span>Nothing that watches or listens. No tracking, no account.</span></div></li>
+      </ol>
+      <div class="note" style="margin-top:22px">full spec sheet coming soon</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 TRUST ================= -->
+<section class="trust" id="trust">
+  <div class="wrap">
+    <div class="eyebrow">07 · why you can trust dino</div>
+    <h2>Real, honest, and private.</h2>
+    <div class="trust-grid">
+      <div class="tpoints">
+        <div class="tp"><b>What you see is what it does</b><p>Every animation on this page is Dino's actual firmware, frame for frame. Nothing is mocked up.</p></div>
+        <div class="tp"><b>Honest about what's ready</b>
+          <div class="status">
+            <div><span class="tag ok">ready now</span><p>Faces and moods · pet, tilt, shake and pick-up reactions · clock, alarm, stopwatch · focus timer · breathing break · charging</p></div>
+            <div><span class="tag later">later update</span><p>Tiny games · friends and messages</p></div>
+          </div></div>
+        <div class="tp"><b>Private by design</b><p>No camera, no microphone, no account, no tracking. It's a companion, not a sensor.</p></div>
+        <div class="tp"><b>Nothing to pay today</b><p>Reserving is free. We'll email you the price and shipping date before you pay anything.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h3>Questions</h3>
+      <details class="q"><summary>Do I need an app?</summary><p>No. Dino works out of the box: no app, no account, no setup.</p></details>
+      <details class="q"><summary>Does it have a camera or microphone?</summary><p>No. It can't see or hear you.</p></details>
+      <details class="q"><summary>How big is it?</summary><p>About 7.5 cm tall, small enough to sit next to your keyboard.</p></details>
+      <details class="q"><summary>How does it charge?</summary><p>Over USB-C. The cable comes in the box.</p></details>
+      <details class="q"><summary>What is it made of?</summary><p>Three parts printed in matte PLA: the body, the screen bezel and the back plate.</p></details>
+      <details class="q"><summary>Do I pay now?</summary><p>No. Reserving only takes your name and email. We'll write with the price and shipping date before you pay anything.</p></details>
+      <details class="q"><summary>When does it ship?</summary><p>We'll share the date with everyone on the list when pre-orders open.</p></details>
+      <details class="q"><summary>When do games and friends arrive?</summary><p>They're planned for a later update. Everything else on this page works today.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<div class="wrap" id="preorder">
+  <div class="cta step lg">
+    <div>
+      <div class="eyebrow">pre-order · dino by pixling</div>
+      <h2 style="margin-top:14px">Bring Dino home<span class="sp">.</span></h2>
+      <p>For your desk, your shelf, or the spot next to your monitor. Reserve yours now and we'll write the moment pre-orders open, with the price and shipping date.</p>
+      <div class="box">
+        <div><span class="mono">in the box</span>Dino · USB-C cable</div>
+        <div><span class="mono">colour</span>matte black · more later</div>
+        <div><span class="mono">price</span>coming soon</div>
+        <div><span class="mono">reserving</span>free · no payment now</div>
+      </div>
+      <!-- TODO: set data-endpoint to your form backend (e.g. Formspree / Google Apps Script / Razorpay link). Until then nothing is stored. -->
+      <form id="wl" data-endpoint="">
+        <label><span>name</span><input type="text" name="name" placeholder="your name" required autocomplete="name" maxlength="80"></label>
+        <label><span>email</span><input type="email" name="email" placeholder="you@email.com" required autocomplete="email"></label>
+        <label class="full"><span>mobile <i>optional</i></span><input type="tel" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" inputmode="tel" pattern="[+]?[0-9 ]{10,15}" title="10-digit mobile number, with or without +91"></label>
+        <p class="consent full">We'll only use these to tell you about Dino pre-orders. No spam, no sharing.</p>
+        <button class="btn step sm" type="submit">reserve mine <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></button>
+      </form>
+      <div class="msg" id="wlmsg"></div>
+    </div>
+    <div><img class="ctaimg" src="assets/web/dino_hero.webp" alt="Dino" loading="lazy"></div>
+  </div>
+  <footer>
+    <span>© 2026 Pixling</span>
+    <canvas id="wordmark2" data-fg="#282020" data-bit="0.5"></canvas>
+    <div class="soc"><a href="#">instagram</a><a href="#">x</a><a href="#">youtube</a></div>
+  </footer>
+</div>
+</main>
+
+<script>
+/*WEDGE*/
+</script>
+<script>
+(()=>{
+const SCREEN=[0xC7,0xEA,0xFF];
+const DPR=Math.max(1,Math.round(window.devicePixelRatio||1));
+const P=s=>s.split(' ');
+
+/* ---------- brand sprites (from Pixling brand language v1) ---------- */
+const WORD=['######...##...........##..##..................','#######..##...........##..##..................','##...##...............##......................','##...##..##..##...##..##..##..######....######','##...##..##..##...##..##..##..#######..#######','#######..##...##.##...##..##..##...##..##...##','######...##....###....##..##..##...##..##...##','##.......##...##.##...##..##..##...##..##...##','##.......##..##...##..##..##..##...##..#######','##.......##..##...##..##..##..##...##...######','............................................##','.......................................######.'];
+const DOT={happy:P('11111111 11111111 11111111 11011011 10100101 11111111 11111111 11111111'),open:P('11111111 11111111 11011011 11011011 11011011 11111111 11111111 11111111'),half:P('11111111 11111111 11111111 11111111 11011011 11111111 11111111 11111111'),closed:P('11111111 11111111 11111111 11111111 10011001 11111111 11111111 11111111'),peek:P('11111111 11111111 01101111 01101111 01101111 11111111 11111111 11111111')};
+const SEQ=[['happy',2400],['open',1600],['half',70],['closed',120],['half',70],['open',1400],['peek',1300],['open',900]];
+const DINO=P('...........##........... ..#......#.##.#......#.. ..##.....######.....##.. ..###..##########..###.. ...#.##############.#... ...##################... ...####wwwwwwwwww####... ...###wwwwwwwwwwww###... ...###wwwwwwwwwwww###... ...###wwwwwwwwwwww###... ...###wwwwwwwwwwww###... ...###wwwwwwwwwwww###... ...###wwwwwwwwwwww###... ...####wwwwwwwwww####... ...##################... .#.##################.#. ##.##################.## ##.##################.## .#.##################.#. ...##################... ....################.... ....######....######.... ....######....######....');
+const RING=P('..........####.......... .........##..##......... .........##..##......... ..........####.......... ...........##...........');
+const PERSON=['.##########.','############','############','##..####..##','##..####..##','##..####..##','.##########.','.....##.....','.....##.....','..########..','#.########.#','#.########.#','..########..','..##....##..','..##....##..','..##....##..','.###....###.','.###....###.'];
+const ARROW=['...#...','....#..','.....#.','#######','.....#.','....#..','...#...'];
+const HEART=['.##.##.','#######','#######','.#####.','..###..','...#...'];
+
+function wordBits(face){const f=DOT[face]||DOT.happy,o=[];for(let r=0;r<48;r++){let s='';for(let c=0;c<184;c++){let on=WORD[r>>2][c>>2]==='#';if(r<8&&c>=36&&c<44)on=f[r][c-36]==='1';s+=on?'1':'0';}o.push(s);}return o;}
+function drawRows(cv,rows,fg,on='#'){cv.width=rows[0].length;cv.height=rows.length;const c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);c.fillStyle=fg;rows.forEach((r,y)=>{for(let x=0;x<r.length;x++)if(r[x]===on)c.fillRect(x,y,1,1);});}
+
+/* wordmark with the live face in the dot of the i */
+function wordmark(cv){const fg=cv.dataset.fg,bit=Number(cv.dataset.bit)||1,u=Math.max(1,Math.round(bit*DPR));cv.width=184*u;cv.height=48*u;cv.style.width=184*u/DPR+'px';cv.style.height=48*u/DPR+'px';
+  let i=0;const paint=()=>{const rows=wordBits(SEQ[i][0]),c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);c.fillStyle=fg;rows.forEach((r,y)=>{for(let x=0;x<184;x++)if(r[x]==='1')c.fillRect(x*u,y*u,u,u);});};
+  const tick=()=>{i=(i+1)%SEQ.length;paint();setTimeout(tick,SEQ[i][1]);};paint();setTimeout(tick,SEQ[0][1]);}
+document.querySelectorAll('#wordmark,#wordmark2').forEach(wordmark);
+document.querySelectorAll('canvas.px-arrow').forEach(cv=>{const rows=cv.classList.contains('l')?ARROW.map(r=>[...r].reverse().join('')):ARROW;drawRows(cv,rows,cv.dataset.fg||'#FCF8F0');});
+drawRows(document.getElementById('heart'),HEART,'#2F9083');
+
+/* ---------- device screens: real 128x64 frames from the Dino wedge sheet ---------- */
+const now=new Date(),HHMM=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+const SCN={};WEDGE.build(HHMM,'SAM').forEach(G=>G.scenes.forEach(s=>SCN[s.key]=s));
+const dur=f=>f[3]||f[1]||1000;
+Object.values(SCN).forEach(s=>s.total=s.frames.reduce((a,f)=>a+dur(f),0));
+const players=[];
+function player(cv,spec,delay=0){cv.width=128;cv.height=64;const p={cv,ctx:cv.getContext('2d'),img:null,spec:null,t0:0,last:null};p.img=p.ctx.createImageData(128,64);set(p,spec,delay);players.push(p);return p;}
+function set(p,spec,delay=0){p.spec=spec;p.t0=performance.now()+delay;p.last=null;}
+function frameFor(p,t){const sp=p.spec,sc=SCN[sp.key];if(!sc)return null;if(sp.frame!=null)return sc.frames[sp.frame][0];
+  let e=Math.max(0,t-p.t0);if(sp.once&&e>=sc.total){set(p,sp.then||{key:'idle'});return frameFor(p,t);}e%=sc.total;let i=0;while(i<sc.frames.length-1&&e>=dur(sc.frames[i])){e-=dur(sc.frames[i]);i++;}return sc.frames[i][0];}
+function paint(p,g){const d=p.img.data;for(let i=0;i<8192;i++){const o=i*4;if(g[i]){d[o]=SCREEN[0];d[o+1]=SCREEN[1];d[o+2]=SCREEN[2];}else{d[o]=d[o+1]=d[o+2]=0;}d[o+3]=255;}p.ctx.putImageData(p.img,0,0);}
+function loop(t){players.forEach(p=>{if(p.hidden)return;const g=frameFor(p,t);if(g&&g!==p.last){paint(p,g);p.last=g;}});requestAnimationFrame(loop);}
+const io=new IntersectionObserver(es=>es.forEach(e=>{const p=e.target._p;if(p)p.hidden=!e.isIntersecting;}),{rootMargin:'200px'});
+function attach(cv,spec,delay){const p=player(cv,spec,delay);cv._p=p;io.observe(cv);return p;}
+requestAnimationFrame(loop);
+
+/* icons (16x16 from the device icon set) */
+document.querySelectorAll('canvas[data-icon]').forEach(cv=>{const g=WEDGE.ICON[cv.dataset.icon];if(!g)return;cv.width=16;cv.height=16;const c=cv.getContext('2d');c.fillStyle=cv.dataset.fg||'#282020';for(let i=0;i<256;i++)if(g[i])c.fillRect(i%16,(i/16)|0,1,1);});
+
+/* plain screen canvases */
+document.querySelectorAll('canvas[data-scene]').forEach(cv=>attach(cv,{key:cv.dataset.scene},Number(cv.dataset.delay)||0));
+
+/* ---------- dino sprite with a screen window ---------- */
+function mountDino(el){
+  const rows=el.dataset.kind==='key'?RING.concat(DINO):DINO,R=rows.length,C=rows[0].length;
+  let r0=1e9,r1=-1,c0=1e9,c1=-1;rows.forEach((r,y)=>{for(let x=0;x<C;x++)if(r[x]==='w'){r0=Math.min(r0,y);r1=Math.max(r1,y);c0=Math.min(c0,x);c1=Math.max(c1,x);}});
+  el.style.aspectRatio=C+'/'+R;
+  const scr=document.createElement('div');scr.className='scr';
+  Object.assign(scr.style,{left:c0/C*100+'%',top:r0/R*100+'%',width:(c1-c0+1)/C*100+'%',height:(r1-r0+1)/R*100+'%'});
+  const body=document.createElement('canvas');body.className='body';const at=(y,x)=>(rows[y]||'')[x]==='#';const draw=el.dataset.xray?rows.map((r,y)=>[...r].map((ch,x)=>ch==='#'&&!(at(y-1,x)&&at(y+1,x)&&at(y,x-1)&&at(y,x+1))?'#':'.').join('')):rows;drawRows(body,draw,el.dataset.fg||'#FCF8F0');
+  el.append(scr,body);
+  const s=el.dataset.screen||'';
+  if(s==='video'){const v=document.createElement('video');Object.assign(v,{src:'boot_film_wedge_life.mp4',muted:true,loop:true,autoplay:true,playsInline:true});v.setAttribute('muted','');v.setAttribute('playsinline','');scr.append(v);v.play&&v.play().catch(()=>{});}
+  else if(s){const cv=document.createElement('canvas');scr.append(cv);const [k,v]=s.split(':');el._p=attach(cv,k==='expr'?{key:'expressions',frame:+v}:{key:v},Number(el.dataset.delay)||0);}
+  el.addEventListener('click',()=>hop(el));
+}
+function hop(el){el.classList.remove('hop');void el.offsetWidth;el.classList.add('hop');}
+document.querySelectorAll('.dino').forEach(mountDino);
+function mountProd(el){const scr=document.createElement('div');scr.className='scr';el.append(scr);const s=el.dataset.screen||'';
+  if(s==='video'){const v=document.createElement('video');Object.assign(v,{src:'boot_film_wedge_life.mp4',muted:true,loop:true,autoplay:true,playsInline:true});v.setAttribute('muted','');v.setAttribute('playsinline','');scr.append(v);v.play&&v.play().catch(()=>{});}
+  else if(s){const cv=document.createElement('canvas');scr.append(cv);const [k,v]=s.split(':');el._p=attach(cv,k==='expr'?{key:'expressions',frame:+v}:{key:v},Number(el.dataset.delay)||0);}
+  else scr.remove();
+  el.addEventListener('click',()=>hop(el));}
+document.querySelectorAll('.prod').forEach(mountProd);
+
+/* ---------- stars ---------- */
+document.querySelectorAll('.stars').forEach(st=>{const pts=[[6,10],[18,4],[30,22],[44,8],[71,6],[86,18],[93,40],[60,30],[12,46],[38,36],[80,52],[52,14]];
+  pts.forEach(([x,y],i)=>{const e=document.createElement('i');if(i%4===1)e.className='t';e.style.left=x+'%';e.style.top=y+'%';st.append(e);});});
+
+/* ---------- hero stairs: a stepped edge, never a curve ---------- */
+(()=>{const n=12,pts=['0 100%','0 0'];for(let i=1;i<=n;i++){const x=(i/n*100).toFixed(2)+'%',y0=((i-1)/n*70).toFixed(2)+'%',y1=(i/n*70).toFixed(2)+'%';pts.push(x+' '+y0,x+' '+y1);}pts.push('100% 100%');document.getElementById('stairs').style.clipPath='polygon('+pts.join(',')+')';})();
+
+/* ---------- sticky bar: hairline once the page scrolls ---------- */
+(()=>{const t=document.getElementById('topbar');const f=()=>t.classList.toggle('scrolled',window.scrollY>8);f();addEventListener('scroll',f,{passive:true});})();
+
+/* ---------- film: play when visible ---------- */
+const film=document.getElementById('film');
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)film.play().catch(()=>{});else film.pause();}),{threshold:.3}).observe(film);
+document.getElementById('replay').onclick=()=>{film.currentTime=0;film.play().catch(()=>{});};
+
+/* ---------- meet: expressions ---------- */
+(()=>{const T=document.getElementById('thumbs'),md=document.getElementById('meetDino');const pick=[[0,'idle'],[2,'love'],[12,'mischief'],[15,'excited'],[4,'sleepy']];
+  pick.forEach(([i,n],k)=>{const b=document.createElement('button');b.className='step sm'+(k===0?' on':'');const cv=document.createElement('canvas');attach(cv,{key:'expressions',frame:i});b.append(cv,document.createTextNode(n));
+    b.onclick=()=>{T.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');set(md._p,{key:'expressions',frame:i});hop(md);};T.append(b);});
+  let k=0;const auto=setInterval(()=>{if(T.matches(':hover'))return;k=(k+1)%pick.length;T.children[k].click();},3200);T.addEventListener('click',()=>clearInterval(auto),{once:true});})();
+
+/* ---------- play: gestures drive the big dino ---------- */
+(()=>{const G=document.getElementById('gestures'),pd=document.getElementById('playDino');
+  const gs=[['double tap','show the time','time'],['hold 0.6 s','pet it','pet'],['shake','it gets dizzy','shake'],['tilt','eyes slide downhill','tilt'],['pick it up','a little surprised','pickup'],['long press','open the menu','menu'],['flip face-down','start a focus session','focuspick'],['plug in usb-c','it charges, happily','charging']];
+  gs.forEach(([g,d,k])=>{const b=document.createElement('button');b.className='step sm';b.innerHTML='<b>'+g+'</b><span>'+d+'</span>';
+    b.onclick=()=>{G.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');set(pd._p,{key:k,once:true,then:{key:'idle'}});hop(pd);setTimeout(()=>b.classList.remove('on'),SCN[k].total);};G.append(b);});})();
+
+/* ---------- a day with dino ---------- */
+(()=>{const R=document.getElementById('rail');
+  const day=[['07:30','alarm','Wake up, gently','It starts soft and only gets louder if you sleep through it.','tap to snooze · flip to dismiss'],
+    ['09:30','focus','Focus, together','Pick 25, 45 or 60 minutes and flip it face-down to start.','countdown updates once a minute'],
+    ['11:00','break','Breathe for a minute','After a focus session: in four, hold four, out four.','after focus · 5 min'],
+    ['13:00','stopwatch','Time the chai','A stopwatch that nods once every minute it counts.','counting up'],
+    ['15:30','time','What time is it?','Double-tap. The face steps aside and the time appears.','double tap'],
+    ['19:00','charging','Top up','Plug in the USB-C cable and it charges, a little smug about it.','usb power detected'],
+    ['23:00','sleep','Goodnight','No input for five minutes and it drifts off.','any touch wakes it'],
+    ['soon','meteor','Meteor dodge','Tilt to run. Survive as many meteors as you can.','games · coming soon',1],
+    ['soon','pong','Desk pong','The ball travels from your Dino to a friend\'s.','games · coming soon',1],
+    ['soon','receive','A note from a friend','Bump two Dinos to pair, then send tiny messages.','friends · coming soon',1]];
+  day.forEach(([tm,k,t,d,tr,later],i)=>{const c=document.createElement('div');c.className='dcard step'+(later?' later':'');c.innerHTML='<div class="s step sm"><canvas></canvas></div><div class="tm">'+(later?'<i class="soon" style="margin:0">coming soon</i>':tm)+'</div><b>'+t+'</b><span>'+d+'</span><div class="tr">'+tr+'</div>';R.append(c);attach(c.querySelector('canvas'),{key:k},i*350);});
+  const step=()=>R.querySelector('.dcard').offsetWidth+22;
+  document.querySelector('.arrows .next').onclick=()=>R.scrollBy({left:step(),behavior:'smooth'});
+  document.querySelector('.arrows .prev').onclick=()=>R.scrollBy({left:-step(),behavior:'smooth'});})();
+
+/* ---------- waitlist ---------- */
+document.getElementById('wl').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,m=document.getElementById('wlmsg'),ep=f.dataset.endpoint;
+  if(!ep){m.textContent='pre-orders open soon.';return;}
+  try{await fetch(ep,{method:'POST',body:new FormData(f)});m.textContent='reserved. we\'ll write when pre-orders open.';f.reset();}catch(_){m.textContent='that didn\'t go through. try again?';}});
+})();
+</script>
+</body>
+</html>

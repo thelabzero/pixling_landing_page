@@ -4,7 +4,7 @@ The renders use a shadow catcher, so the floor is semi-transparent. Its alpha is
 towards the image edges so no rectangle shows on the page; fully opaque pixels (Dino) stay untouched."""
 import os
 from PIL import Image, ImageChops
-SRC, DST = 'assets/renders', 'assets/web'
+SRC, DST = 'assets/renders', 'public/assets'
 SIZES = {'dino_hero': 1100, 'dino_front_blank': 1100, 'dino_back': 800, 'dino_exploded': 1400, 'dino_cta_look': 1100}
 os.makedirs(DST, exist_ok=True)
 

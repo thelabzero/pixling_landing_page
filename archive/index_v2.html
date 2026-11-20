@@ -50,25 +50,7 @@ canvas,video{image-rendering:pixelated;image-rendering:crisp-edges;display:block
 .prod img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none}
 .prod .scr{position:absolute;left:34.86%;top:38.81%;width:30.34%;height:15.14%;background:#000;overflow:hidden}
 .prod .scr>*{width:100%;height:100%;object-fit:contain}
-.ctaprod{position:relative;width:min(440px,100%);margin:0 auto -40px}
-.ctaprod img{display:block;width:100%;height:auto;user-select:none;-webkit-user-drag:none}
-.ctabob{position:relative}
-/* reserved: Dino moves to the centre, faces the visitor, bobs, and sends up pixel hearts */
-.ctaprod.front .qscr{clip-path:none}
-.ctaprod.bob .ctabob{animation:ctabob 2.6s steps(5) infinite}
-@keyframes ctabob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.hrt{position:absolute;width:14px;height:12px;background-size:100% 100%;image-rendering:pixelated;pointer-events:none;opacity:0;animation:hrt 1.9s steps(9) forwards}
-@keyframes hrt{0%{opacity:0;transform:translate(0,0)}12%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),-130px)}}
-.cta.is-reserved{grid-template-columns:1fr;justify-items:center;align-items:start;text-align:center;gap:0;padding-bottom:56px}
-.cta.is-reserved .cta-right{order:-1;width:100%}
-.cta.is-reserved .cta-intro{display:none}
-.cta.is-reserved .cta-left{width:100%;max-width:560px}
-.cta.is-reserved .ctaprod{width:min(400px,100%);margin:0 auto -60px}
-.cta.is-reserved .done{margin:0 auto}
-.cta.is-reserved .done-actions{justify-content:center}
-.cta.is-reserved .done p{margin-left:auto;margin-right:auto}
-.qscr{position:absolute;left:0;top:0;width:128px;height:64px;transform-origin:0 0;background:#000;overflow:hidden;clip-path:inset(0 5% 0 0)} /* right edge tucks behind the bezel lip, as the recessed screen does in the render */
-.qscr canvas{display:block;width:128px;height:64px;image-rendering:pixelated}
+.ctaimg{width:min(400px,100%);display:block;margin:0 auto -40px}
 
 /* ---------- STICKY TOP BAR ---------- */
 html{scroll-padding-top:68px}
@@ -219,26 +201,48 @@ section.inside{background:var(--night);color:var(--cream);padding:110px 0}
 .parts b{display:block;font-size:15px;font-weight:600}
 .parts li span:not(.n){display:block;font-size:13px;line-height:1.55;color:var(--muted);margin-top:4px}
 
+/* ---------- V2: hero trust line ---------- */
+.hero-trust{margin-top:22px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+/* ---------- V2: what it does ---------- */
+section.does{padding:70px 0 90px}
+.does h2,.trust h2{font-size:clamp(30px,3.8vw,46px);font-weight:600;letter-spacing:-.03em;line-height:1.1;margin-top:10px}
+.does-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+.job{background:var(--paper);padding:18px 18px 22px}
+.job .s{background:var(--night);padding:10px}
+.job .s canvas{width:100%;aspect-ratio:2/1;background:#000}
+.job b{display:block;font-size:20px;font-weight:600;margin-top:18px}
+.job p{font-size:14px;line-height:1.6;color:var(--ink2);margin-top:8px}
+.job .how{font-family:var(--mono);font-size:12px;color:var(--teal);margin-top:14px}
+.later{font-family:var(--mono);font-size:12px;color:var(--ink2);margin-top:20px}
+.later a{color:var(--teal)}
+/* ---------- V2: trust ---------- */
+section.trust{padding:100px 0 90px}
+.trust-grid{display:block;margin-top:34px;max-width:980px}
+.proto{background:var(--night);padding:12px 12px 14px;margin:0}
+.proto img{display:block;width:100%;height:auto}
+.proto figcaption{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px}
+.tpoints{display:grid;grid-template-columns:1fr 1fr;gap:28px 32px}
+.tp b{display:block;font-size:18px;font-weight:600}
+.tp p{font-size:14px;line-height:1.6;color:var(--ink2);margin-top:8px}
+.tp:nth-child(2){grid-column:1/-1}
+.status{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;margin-top:10px}
+.status .tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 7px}
+.status .tag.ok{background:var(--night);color:var(--cream)}
+.status .tag.later{background:var(--teal);color:var(--cream)}
+.faq{margin-top:64px;border-top:2px solid var(--sand);padding-top:30px;max-width:860px}
+.faq h3{font-size:22px;font-weight:600;margin-bottom:10px}
+.faq details{border-bottom:2px solid var(--sand)}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-size:16px;font-weight:600;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font-family:var(--mono);color:var(--teal)}
+.faq details[open] summary:after{content:"–"}
+.faq details p{font-size:15px;line-height:1.6;color:var(--ink2);padding:0 0 18px;max-width:680px}
+
 /* ---------- PROMISE ---------- */
 section.promise{padding:40px 0 100px}
 .prom{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;border-top:2px solid var(--sand);padding-top:36px;margin-top:22px}
 .prom b{display:block;font-size:18px;font-weight:600;margin-top:8px}
 .prom p{font-size:14px;line-height:1.6;color:var(--ink2);margin-top:8px}
-
-/* ---------- CTA: reservation confirmed ---------- */
-.done{display:block;margin:26px 0 64px;max-width:600px;animation:doneIn .5s steps(5) both}
-.done[hidden],.cta form[hidden]{display:none}
-@keyframes doneIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-.done-tag{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:var(--cream);font-family:var(--mono);font-size:12px;padding:5px 10px 5px 8px}
-.done-tag canvas{width:18px;height:14px}
-.done h3{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.15;margin-top:14px}
-.done p{color:var(--sand);font-size:15px;line-height:1.6;margin-top:10px}
-.done p b{color:var(--cream);font-weight:500}
-.done-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:20px}
-.linkbtn{background:none;border:0;color:var(--muted);font-family:var(--mono);font-size:12px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.linkbtn:hover{color:var(--cream)}
-.confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
-.topbar .tbbtn.is-reserved{background:var(--teal);color:var(--cream)}
 
 /* ---------- CTA ---------- */
 .cta{background:var(--night);color:var(--cream);display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:end;padding:64px 64px 0;position:relative;overflow:hidden;margin-bottom:60px}
@@ -340,15 +344,23 @@ footer a:hover{color:var(--teal)}
   .cta .box{flex-wrap:wrap;gap:14px 28px}
   .cta form{margin:22px 0 20px}
   .cta .msg{margin:0 0 20px}
-  .ctaprod{width:min(320px,90%);margin-bottom:-24px}
-  .cta.is-reserved .ctaprod{width:min(300px,90%);margin-bottom:-44px}
+  .ctaimg{width:min(300px,90%);margin-bottom:-24px}
+}
+@media (max-width:920px){
+  section.does{padding:56px 0 64px}
+  .does-grid{grid-template-columns:1fr;gap:14px;margin-top:24px}
+  section.trust{padding:72px 0 64px}
+  .trust-grid{grid-template-columns:1fr;gap:28px}
+  .proto{max-width:420px}
+  .tpoints{grid-template-columns:1fr;gap:22px}
+  .status{grid-template-columns:1fr;gap:12px}
+  .faq{margin-top:44px}
 }
 @media (max-width:380px){
   .tbbtn{padding-left:10px;font-size:12px}
   .gestures{grid-template-columns:1fr 1fr;gap:8px}
 }
-@media (max-width:920px){.done{margin:22px 0 28px}.done h3{font-size:26px}}
-@media (prefers-reduced-motion:reduce){.hop{animation:none}.done{animation:none}.ctaprod.bob .ctabob{animation:none}.hrt{display:none}}
+@media (prefers-reduced-motion:reduce){.hop{animation:none}}
 </style>
 </head>
 <body>
@@ -356,9 +368,9 @@ footer a:hover{color:var(--teal)}
 <!-- ================= STICKY TOP BAR: logo + pre-order always visible ================= -->
 <div class="topbar" id="topbar">
   <div class="wrap tb">
-    <div class="l"><a href="#meet">what is dino</a><a href="#day">life with dino</a><a href="#inside">what's inside</a></div>
+    <div class="l"><a href="#does">what it does</a><a href="#why">why dino</a><a href="#trust">faq</a></div>
     <a href="#top" class="logo" aria-label="Pixling, back to top"><canvas id="wordmark" data-fg="#FCF8F0" data-bit="0.5"></canvas></a>
-    <div class="r"><a class="lnk" href="#born">how it's born</a><a class="btn step sm tbbtn" href="#preorder">pre-order <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:12px;height:12px"></canvas></span></a></div>
+    <div class="r"><a class="lnk" href="#day">a day with dino</a><a class="btn step sm tbbtn" href="#preorder">pre-order <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:12px;height:12px"></canvas></span></a></div>
   </div>
 </div>
 
@@ -371,14 +383,15 @@ footer a:hover{color:var(--teal)}
       <div style="position:relative">
         <div class="eyebrow">dino · the first pixling</div>
         <h1 style="margin-top:18px">A tiny friend for your desk, alive in pixels<span class="sp">.</span></h1>
-        <p class="lead">Dino is a little matte monster with a screen for a face. It blinks, peeks, gets sleepy, and shows you the time when you double-tap it.</p>
+        <p class="lead">Dino is a palm-sized desk companion with a screen for a face. Double-tap for the time, flip it face-down for a focus timer, and watch it react when you pet, tilt or pick it up.</p>
         <div class="actions">
           <a class="btn step sm" href="#preorder">pre-order dino <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></a>
-          <a class="watch" href="#born">watch it wake ↓</a>
+          <a class="watch" href="#does">see what it does ↓</a>
         </div>
+        <div class="hero-trust">free to reserve · no app · no camera or mic</div>
       </div>
       <div class="stage">
-        <div class="stamp step sm" aria-label="no camera, no mic"><canvas id="heart" width="7" height="6"></canvas>no camera<br>no mic</div>
+        <div class="stamp step sm" aria-label="no app, no camera, no mic"><canvas id="heart" width="7" height="6"></canvas>no app<br>no camera<br>no mic</div>
         <div class="prod d2"><img src="assets/web/dino_back.webp" alt="Dino from the back" loading="eager"></div>
         <div class="prod d1" data-screen="video"><img src="assets/web/dino_front_blank.webp" alt="Dino, front view" loading="eager"></div>
       </div>
@@ -388,45 +401,65 @@ footer a:hover{color:var(--teal)}
 </header>
 
 <main>
-<div class="wrap">
-  <div class="moment">
-    <div class="mini step sm"><div class="s"><canvas data-scene="time"></canvas></div><div class="cap"><span>double tap</span><span>show time</span></div></div>
-    <div>
-      <h3>“It noticed me.”</h3>
-      <p>One double-tap and Dino shows you the time. Then someone across the room leans over: wait… what is that?</p>
+<!-- ================= 01 WHAT IT DOES ================= -->
+<section class="does" id="does">
+  <div class="wrap">
+    <div class="eyebrow">01 · what dino does</div>
+    <h2>Three things, done well.</h2>
+    <div class="does-grid">
+      <div class="job step"><div class="s step sm"><canvas data-scene="time"></canvas></div><b>Tells the time</b><p>Double-tap and the face steps aside for a clock. Alarm and stopwatch are built in.</p><div class="how">double-tap</div></div>
+      <div class="job step"><div class="s step sm"><canvas data-scene="focus" data-delay="400"></canvas></div><b>Keeps you focused</b><p>Flip it face-down to start a 25, 45 or 60-minute focus session. A short breathing break follows.</p><div class="how">flip face-down</div></div>
+      <div class="job step"><div class="s step sm"><canvas data-scene="pet" data-delay="800"></canvas></div><b>Reacts to you</b><p>Pet it, tilt it, shake it or pick it up, and it answers with one of 24 expressions.</p><div class="how">hold · tilt · shake</div></div>
     </div>
+    <div class="later">coming in a later update: tiny games · friends by bump · <a href="#trust">what's ready today →</a></div>
   </div>
+</section>
 
-  <div class="strip" aria-label="what dino does">
-    <div><canvas data-icon="clock"></canvas>clock</div>
-    <div><canvas data-icon="alarm"></canvas>alarm</div>
-    <div><canvas data-icon="focus"></canvas>focus</div>
-    <div><canvas data-icon="coffee"></canvas>breaks</div>
-    <div><canvas data-icon="games"></canvas>games<i class="soon">soon</i></div>
-    <div><canvas data-icon="friends"></canvas>friends<i class="soon">soon</i></div>
+<!-- ================= PLAY ================= -->
+<section class="play" id="play">
+  <div class="wrap">
+    <div class="eyebrow" style="text-align:center">02 · try it yourself</div>
+    <h2 style="margin-top:14px">Tap a gesture. Watch Dino react.</h2>
+    <div class="play-grid">
+      <div class="pcard step"><div class="s"><canvas data-scene="rawr" data-delay="600"></canvas></div><b>A tiny rawr</b><span>Every few minutes it does a little rawr, just for you.</span><div class="t">idle quirk · every 2–4 min</div></div>
+      <div class="center"><div class="prod" id="playDino" data-screen="scene:idle"><img src="assets/web/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
+      <div class="pcard step"><div class="s"><canvas data-scene="sleep" data-delay="2500"></canvas></div><b>It gets sleepy</b><span>Leave it alone and it dozes off. Any touch wakes it.</span><div class="t">no input for 5 min</div></div>
+    </div>
+    <div class="gestures" id="gestures"></div>
+    <div class="hint">pick a gesture to try it on the dino above</div>
   </div>
-</div>
+</section>
 
-<!-- ================= MEET ================= -->
-<section class="meet" id="meet">
+<!-- ================= 03 WHY: benefits ================= -->
+<section class="meet" id="why">
   <div class="wrap meet-grid">
     <div class="meet-vis">
       <div class="big"><div class="prod" id="meetDino" data-screen="expr:0"><img src="assets/web/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
       <div class="thumbs" id="thumbs"></div>
     </div>
     <div>
-      <div class="eyebrow">01 · what is dino</div>
-      <h2>Meet Dino</h2>
-      <p class="body">The first Pixling. A palm-sized printed body, about 7.5 cm tall, with a 128 × 64 screen for a face. The personality lives in the face: one set of eyes, two dozen moods.</p>
+      <div class="eyebrow">03 · why you'll love it</div>
+      <h2>Your desk, a little happier.</h2>
+      <p class="body">Dino is about 7.5 cm tall, with a 128 × 64 screen for a face. It is made for the small moments in a workday, and it never asks for anything back.</p>
       <div class="chips">
-        <div class="chip step sm"><canvas data-icon="clock"></canvas><div><b>Time on a double-tap</b><span>Clock, alarm and stopwatch, right on its face.</span></div></div>
-        <div class="chip step sm"><canvas data-icon="focus"></canvas><div><b>Focus, together</b><span>25, 45 or 60 minutes, then a breathing break.</span></div></div>
-        <div class="chip step sm"><canvas data-icon="games"></canvas><div><b>Tiny games <i class="soon">coming soon</i></b><span>Meteor dodge, snack snap, desk pong, hot egg.</span></div></div>
-        <div class="chip step sm"><canvas data-icon="friends"></canvas><div><b>Friends by bump <i class="soon">coming soon</i></b><span>Knock two Dinos together to pair, then send a rawr.</span></div></div>
+        <div class="chip step sm"><canvas data-icon="clock"></canvas><div><b>Look up from your phone</b><span>Check the time or start a focus session without unlocking your phone and getting pulled into notifications.</span></div></div>
+        <div class="chip step sm"><canvas data-icon="focus"></canvas><div><b>Focus that feels friendly</b><span>A timer with a face, and a breathing break when you finish.</span></div></div>
+        <div class="chip step sm"><canvas data-icon="leaf"></canvas><div><b>A small moment of joy</b><span>It greets you, does a tiny rawr now and then, and dozes off when you leave.</span></div></div>
+        <div class="chip step sm"><canvas data-icon="chat"></canvas><div><b>A conversation starter</b><span>Someone always leans over and asks: wait… what is that?</span></div></div>
       </div>
       <a class="btn dark step sm" href="#preorder">pre-order dino <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></a>
     </div>
   </div>
+</section>
+
+<!-- ================= DAY ================= -->
+<section class="day" id="day">
+  <div class="wrap day-head">
+    <div><div class="eyebrow">04 · life with dino</div><h2>From the morning alarm<br>to a sleepy goodnight.</h2></div>
+    <div class="arrows"><button class="prev" aria-label="previous"><canvas class="px-arrow l" data-fg="#282020" width="7" height="7" style="width:14px;height:14px"></canvas></button><button class="next" aria-label="next"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></button></div>
+  </div>
+  <div class="rail" id="rail"></div>
+  <div class="wrap note">times are an example day · every screen is the real 128 × 64 frame · games and friends are planned for a later update</div>
 </section>
 
 <!-- ================= BORN ================= -->
@@ -434,7 +467,7 @@ footer a:hover{color:var(--teal)}
   <div class="stars" aria-hidden="true"></div>
   <div class="wrap">
     <div class="head">
-      <div class="eyebrow">02 · how a pixling is born</div>
+      <div class="eyebrow">05 · how a pixling is born</div>
       <h2 style="margin-top:12px">Every Pixling starts as a single pixel.</h2>
       <p>The pixel wakes, stands up, and becomes Dino. It's the first thing you see when you switch it on.</p>
     </div>
@@ -450,31 +483,6 @@ footer a:hover{color:var(--teal)}
   </div>
 </section>
 
-<!-- ================= PLAY ================= -->
-<section class="play" id="play">
-  <div class="wrap">
-    <div class="eyebrow" style="text-align:center">03 · how it behaves</div>
-    <h2 style="margin-top:14px">Charming in small doses. Never loud, never needy.</h2>
-    <div class="play-grid">
-      <div class="pcard step"><div class="s"><canvas data-scene="rawr" data-delay="600"></canvas></div><b>A tiny rawr</b><span>Every few minutes it does a little rawr, just for you.</span><div class="t">idle quirk · every 2–4 min</div></div>
-      <div class="center"><div class="prod" id="playDino" data-screen="scene:idle"><img src="assets/web/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
-      <div class="pcard step"><div class="s"><canvas data-scene="sleep" data-delay="2500"></canvas></div><b>It gets sleepy</b><span>Leave it alone and it dozes off. Any touch wakes it.</span><div class="t">no input for 5 min</div></div>
-    </div>
-    <div class="gestures" id="gestures"></div>
-    <div class="hint">pick a gesture to try it on the dino above</div>
-  </div>
-</section>
-
-<!-- ================= DAY ================= -->
-<section class="day" id="day">
-  <div class="wrap day-head">
-    <div><div class="eyebrow">04 · life with dino</div><h2>From the morning alarm<br>to a sleepy goodnight.</h2></div>
-    <div class="arrows"><button class="prev" aria-label="previous"><canvas class="px-arrow l" data-fg="#282020" width="7" height="7" style="width:14px;height:14px"></canvas></button><button class="next" aria-label="next"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></button></div>
-  </div>
-  <div class="rail" id="rail"></div>
-  <div class="wrap note">times are an example day · every screen is the real 128 × 64 frame · games and friends arrive in a later update</div>
-</section>
-
 <!-- ================= INSIDE ================= -->
 <section class="inside" id="inside">
   <div class="wrap inside-grid">
@@ -482,7 +490,7 @@ footer a:hover{color:var(--teal)}
       <img src="assets/web/dino_exploded.webp" alt="Dino exploded view: back plate, body and screen bezel" loading="lazy" style="width:100%;display:block">
     </div>
     <div>
-      <div class="eyebrow">05 · what's inside</div>
+      <div class="eyebrow">06 · what's inside</div>
       <h2>Three printed parts. A tiny computer inside.</h2>
       <p class="lead">A body, a screen bezel and a back plate, printed in matte PLA. Inside: everything Dino needs to notice you, and nothing that watches you.</p>
       <ol class="parts">
@@ -498,15 +506,33 @@ footer a:hover{color:var(--teal)}
   </div>
 </section>
 
-<!-- ================= PROMISE ================= -->
-<section class="promise">
+<!-- ================= 07 TRUST ================= -->
+<section class="trust" id="trust">
   <div class="wrap">
-    <div class="eyebrow">06 · what we promise</div>
-    <div class="prom">
-      <div><span class="eyebrow">01</span><b>Simple</b><p>One tap, one clear thing. It works out of the box: no account, no setup to enjoy it.</p></div>
-      <div><span class="eyebrow">02</span><b>Honest</b><p>No camera, no microphone, no tracking. It's a companion, not a sensor.</p></div>
-      <div><span class="eyebrow">03</span><b>Made to be kept</b><p>Solid in the hand, tough enough for a bag, built to stay on a desk for years, not weeks.</p></div>
-      <div><span class="eyebrow">04</span><b>Alive in pixels</b><p>We give life to the simplest unit of a screen. A few glowing squares can carry a whole personality.</p></div>
+    <div class="eyebrow">07 · why you can trust dino</div>
+    <h2>Real, honest, and private.</h2>
+    <div class="trust-grid">
+      <div class="tpoints">
+        <div class="tp"><b>What you see is what it does</b><p>Every animation on this page is Dino's actual firmware, frame for frame. Nothing is mocked up.</p></div>
+        <div class="tp"><b>Honest about what's ready</b>
+          <div class="status">
+            <div><span class="tag ok">ready now</span><p>Faces and moods · pet, tilt, shake and pick-up reactions · clock, alarm, stopwatch · focus timer · breathing break · charging</p></div>
+            <div><span class="tag later">later update</span><p>Tiny games · friends and messages</p></div>
+          </div></div>
+        <div class="tp"><b>Private by design</b><p>No camera, no microphone, no account, no tracking. It's a companion, not a sensor.</p></div>
+        <div class="tp"><b>Nothing to pay today</b><p>Reserving is free. We'll email you the price and shipping date before you pay anything.</p></div>
+      </div>
+    </div>
+    <div class="faq">
+      <h3>Questions</h3>
+      <details class="q"><summary>Do I need an app?</summary><p>No. Dino works out of the box: no app, no account, no setup.</p></details>
+      <details class="q"><summary>Does it have a camera or microphone?</summary><p>No. It can't see or hear you.</p></details>
+      <details class="q"><summary>How big is it?</summary><p>About 7.5 cm tall, small enough to sit next to your keyboard.</p></details>
+      <details class="q"><summary>How does it charge?</summary><p>Over USB-C. The cable comes in the box.</p></details>
+      <details class="q"><summary>What is it made of?</summary><p>Three parts printed in matte PLA: the body, the screen bezel and the back plate.</p></details>
+      <details class="q"><summary>Do I pay now?</summary><p>No. Reserving only takes your name and email. We'll write with the price and shipping date before you pay anything.</p></details>
+      <details class="q"><summary>When does it ship?</summary><p>We'll share the date with everyone on the list when pre-orders open.</p></details>
+      <details class="q"><summary>When do games and friends arrive?</summary><p>They're planned for a later update. Everything else on this page works today.</p></details>
     </div>
   </div>
 </section>
@@ -514,8 +540,7 @@ footer a:hover{color:var(--teal)}
 <!-- ================= CTA ================= -->
 <div class="wrap" id="preorder">
   <div class="cta step lg">
-    <div class="cta-left">
-      <div class="cta-intro">
+    <div>
       <div class="eyebrow">pre-order · dino by pixling</div>
       <h2 style="margin-top:14px">Bring Dino home<span class="sp">.</span></h2>
       <p>For your desk, your shelf, or the spot next to your monitor. Reserve yours now and we'll write the moment pre-orders open, with the price and shipping date.</p>
@@ -523,10 +548,10 @@ footer a:hover{color:var(--teal)}
         <div><span class="mono">in the box</span>Dino · USB-C cable</div>
         <div><span class="mono">colour</span>matte black · more later</div>
         <div><span class="mono">price</span>coming soon</div>
+        <div><span class="mono">reserving</span>free · no payment now</div>
       </div>
-      </div>
-      <!-- Submissions go to PostHog as the event pixling_waitlist_submit (see the tracking script at the end of the page). -->
-      <form id="wl">
+      <!-- TODO: set data-endpoint to your form backend (e.g. Formspree / Google Apps Script / Razorpay link). Until then nothing is stored. -->
+      <form id="wl" data-endpoint="">
         <label><span>name</span><input type="text" name="name" placeholder="your name" required autocomplete="name" maxlength="80"></label>
         <label><span>email</span><input type="email" name="email" placeholder="you@email.com" required autocomplete="email"></label>
         <label class="full"><span>mobile <i>optional</i></span><input type="tel" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" inputmode="tel" pattern="[+]?[0-9 ]{10,15}" title="10-digit mobile number, with or without +91"></label>
@@ -534,25 +559,8 @@ footer a:hover{color:var(--teal)}
         <button class="btn step sm" type="submit">reserve mine <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></button>
       </form>
       <div class="msg" id="wlmsg"></div>
-      <div class="done" id="wldone" hidden aria-live="polite">
-        <div class="done-txt">
-          <div class="done-tag"><canvas id="doneTick"></canvas><span>reserved</span></div>
-          <h3>You're in, <span id="doneName">friend</span>.</h3>
-          <p id="doneLine">Your Dino is reserved. We'll write when pre-orders open, with the price and shipping date. Nothing to pay today.</p>
-          <div class="done-actions">
-            <button class="btn step sm" type="button" id="shareBtn">tell a friend <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></button>
-            <button class="linkbtn" type="button" id="againBtn">reserve another</button>
-          </div>
-        </div>
-      </div>
     </div>
-    <div class="cta-right"><div class="ctaprod" id="ctaImg" data-quad="29.71,38.37 51.77,40.41 51.76,55.16 29.89,52.09">
-      <div class="ctabob">
-        <img src="assets/web/dino_cta_look.webp" width="1100" height="1100" alt="Dino looking at the form" loading="lazy">
-        <div class="qscr"><canvas id="ctaScreen"></canvas></div>
-      </div>
-    </div></div>
-    <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+    <div><img class="ctaimg" src="assets/web/dino_hero.webp" alt="Dino" loading="lazy"></div>
   </div>
   <footer>
     <span>© 2026 Pixling</span>
@@ -1067,7 +1075,6 @@ function loop(t){players.forEach(p=>{if(p.hidden)return;const g=frameFor(p,t);if
 const io=new IntersectionObserver(es=>es.forEach(e=>{const p=e.target._p;if(p)p.hidden=!e.isIntersecting;}),{rootMargin:'200px'});
 function attach(cv,spec,delay){const p=player(cv,spec,delay);cv._p=p;io.observe(cv);return p;}
 requestAnimationFrame(loop);
-window.PXL_DINO={attach:(cv,spec)=>attach(cv,spec,0),set:(p,spec)=>set(p,spec),hop:el=>hop(el)};
 
 /* icons (16x16 from the device icon set) */
 document.querySelectorAll('canvas[data-icon]').forEach(cv=>{const g=WEDGE.ICON[cv.dataset.icon];if(!g)return;cv.width=16;cv.height=16;const c=cv.getContext('2d');c.fillStyle=cv.dataset.fg||'#282020';for(let i=0;i<256;i++)if(g[i])c.fillRect(i%16,(i/16)|0,1,1);});
@@ -1142,211 +1149,10 @@ document.getElementById('replay').onclick=()=>{film.currentTime=0;film.play().ca
   document.querySelector('.arrows .next').onclick=()=>R.scrollBy({left:step(),behavior:'smooth'});
   document.querySelector('.arrows .prev').onclick=()=>R.scrollBy({left:-step(),behavior:'smooth'});})();
 
-})();
-</script>
-
-<script>
-/* ---------- Pixling analytics (PostHog, EU). Every event is prefixed pixling_ ---------- */
-(()=>{
-const KEY='phc_r7uQ4FmZCLBTwGvwX2unS8joJxvDANX5d7ex6UYF5ZCx',HOST='https://eu.i.posthog.com';
-const T0=performance.now(),Q=[];let ready=false;
-const host=location.hostname;
-const ENV=/(^|\.)(github\.io|pixling\.[a-z.]+)$/.test(host)?'prod':'dev';
-const q=new URLSearchParams(location.search);
-const UTM={};['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{if(q.get(k))UTM[k]=q.get(k);});
-let refHost='';try{refHost=document.referrer?new URL(document.referrer).hostname:'';}catch(_){}
-const vw=innerWidth,device=vw<700?'mobile':vw<1100?'tablet':'desktop';
-const sec=()=>Math.round((performance.now()-T0)/100)/10;
-function pxl(name,props){const e='pixling_'+name,p=Object.assign({seconds_since_load:sec()},props||{});
-  if(ready){try{posthog.capture(e,p);}catch(_){}}else if(Q.length<200)Q.push([e,p]);}
-window.pxl=pxl;
-
-const s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';s.src='https://eu-assets.i.posthog.com/static/array.js';
-s.onload=()=>{try{
-  posthog.init(KEY,{api_host:HOST,autocapture:false,capture_pageview:false,capture_pageleave:false,person_profiles:'identified_only',
-    persistence:'localStorage+cookie',session_recording:{maskAllInputs:true},
-    loaded:ph=>{ph.register({pixling_site:'landing',pixling_version:'v1',pixling_env:ENV,pixling_device:device});}});
-  ready=true;Q.splice(0).forEach(([e,p])=>{try{posthog.capture(e,p);}catch(_){}});
-}catch(_){}};
-document.head.appendChild(s);
-
-/* page view */
-pxl('page_view',Object.assign({path:location.pathname,referrer_host:refHost,viewport_w:vw,viewport_h:innerHeight,
-  device_type:device,touch:('ontouchstart' in window),language:navigator.language,dpr:window.devicePixelRatio||1},UTM));
-
-/* first interaction */
-let firstDone=false;
-['pointerdown','keydown','touchstart','scroll'].forEach(t=>addEventListener(t,ev=>{if(firstDone||!ev.isTrusted)return;
-  firstDone=true;pxl('first_interaction',{type:t});},{capture:true,passive:true}));
-
-/* sections reached */
-const SECTIONS=[['top','hero'],['meet','meet'],['born','born'],['play','play'],['day','day'],['inside','inside'],['preorder','preorder']];
-const seen=new Set();
-const sio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const n=e.target.dataset.pxlSection;if(seen.has(n))return;
-  seen.add(n);pxl('section_view',{section:n,order:SECTIONS.findIndex(x=>x[1]===n)+1,sections_seen:seen.size});sio.unobserve(e.target);}),{threshold:.35});
-SECTIONS.forEach(([id,n])=>{const el=document.getElementById(id);if(el){el.dataset.pxlSection=n;sio.observe(el);}});
-const prom=document.querySelector('section.promise');if(prom){prom.dataset.pxlSection='promise';sio.observe(prom);}
-
-/* scroll depth */
-const depths=[25,50,75,90,100],hit=new Set();let maxScroll=0;
-function onScroll(){const h=document.documentElement,tot=h.scrollHeight-innerHeight;if(tot<=0)return;
-  const pc=Math.min(100,Math.round(scrollY/tot*100));maxScroll=Math.max(maxScroll,pc);
-  depths.forEach(d=>{if(pc>=d&&!hit.has(d)){hit.add(d);pxl('scroll_depth',{depth:d});}});}
-addEventListener('scroll',onScroll,{passive:true});
-
-/* engaged time: only counts while the tab is visible */
-let vis=0,last=performance.now();const marks=[15,30,60,120,300],done=new Set();
-setInterval(()=>{const n=performance.now();if(!document.hidden)vis+=(n-last)/1000;last=n;
-  marks.forEach(m=>{if(vis>=m&&!done.has(m)){done.add(m);pxl('engaged_time',{seconds:m});}});},1000);
-
-/* clicks: nav, cta, social, expressions, gestures, dino taps, film, day rail */
-const label=el=>(el.getAttribute('aria-label')||el.textContent||'').replace(/\s+/g,' ').trim().slice(0,60).toLowerCase();
-const where=el=>el.closest('.topbar')?'topbar':el.closest('header.hero')?'hero':el.closest('footer')?'footer':(el.closest('[data-pxl-section]')||{dataset:{}}).dataset.pxlSection||'page';
-document.addEventListener('click',ev=>{if(!ev.isTrusted)return;const t=ev.target;
-  const a=t.closest('a');
-  if(a){const href=a.getAttribute('href')||'';
-    if(href==='#preorder'){pxl('cta_click',{label:label(a),location:where(a)});return;}
-    if(a.closest('.soc')){pxl('social_click',{network:label(a)});return;}
-    if(href.startsWith('#')&&href.length>1){pxl('nav_click',{label:label(a),target:href.slice(1),location:where(a)});return;}}
-  const th=t.closest('#thumbs button');if(th){pxl('expression_select',{expression:label(th),index:[...th.parentNode.children].indexOf(th)});return;}
-  const ge=t.closest('#gestures button');if(ge){const b=ge.querySelector('b');pxl('gesture_select',{gesture:b?b.textContent.toLowerCase():label(ge)});return;}
-  if(t.closest('#replay')){pxl('film_replay');return;}
-  const ar=t.closest('.arrows button');if(ar){pxl('day_rail_nav',{direction:ar.classList.contains('next')?'next':'prev'});return;}
-  const dc=t.closest('.dcard');if(dc){pxl('day_card_tap',{card:label(dc.querySelector('h3,h4,.t')||dc).slice(0,40)});return;}
-  const dino=t.closest('.prod,.dino');if(dino){pxl('dino_tap',{where:dino.id||where(dino)});}
-},true);
-
-/* film */
-const film=document.getElementById('film');
-if(film)film.addEventListener('playing',()=>pxl('film_play'),{once:true});
-
-/* day rail: how far people swipe */
-const rail=document.getElementById('rail');let railMax=0;
-if(rail)rail.addEventListener('scroll',()=>{const p=Math.round(rail.scrollLeft/(rail.scrollWidth-rail.clientWidth||1)*100);
-  [50,100].forEach(d=>{if(p>=d&&railMax<d){railMax=d;pxl('day_rail_scroll',{depth:d});}});},{passive:true});
-
-/* ---------- pre-order Dino: faces the form and reacts while it is filled in ---------- */
-const ctaBox=document.getElementById('ctaImg'),ctaCv=document.getElementById('ctaScreen');
-const CTAM={watch:{key:'idle',frame:7},excited:{key:'expressions',frame:15},happy:{key:'expressions',frame:1},
-  love:{key:'expressions',frame:2},surprised:{key:'expressions',frame:6},idle:{key:'idle'}};
-let ctaP=null,ctaMoodT=0,ctaOutT=0,ctaLastHop=0;
-const ctaReduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function ctaSolve(A,b){const n=b.length,M=A.map((r,i)=>r.concat(b[i]));
-  for(let c=0;c<n;c++){let m=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[m][c]))m=r;
-    if(Math.abs(M[m][c])<1e-12)return null;[M[c],M[m]]=[M[m],M[c]];
-    for(let r=c+1;r<n;r++){const f=M[r][c]/M[c][c];for(let k=c;k<=n;k++)M[r][k]-=f*M[c][k];}}
-  const x=new Array(n);for(let r=n-1;r>=0;r--){let t=M[r][n];for(let k=r+1;k<n;k++)t-=M[r][k]*x[k];x[r]=t/M[r][r];}return x;}
-function ctaFit(){if(!ctaBox)return;const W=ctaBox.clientWidth,H=ctaBox.clientHeight;if(!W||!H)return;
-  const dst=ctaBox.dataset.quad.trim().split(/\s+/).map(q=>{const[a,b]=q.split(',').map(Number);return[a/100*W,b/100*H];});
-  const src=[[0,0],[128,0],[128,64],[0,64]],A=[],b=[];
-  for(let i=0;i<4;i++){const[x,y]=src[i],[u,v]=dst[i];A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v);}
-  const h=ctaSolve(A,b);if(!h)return;
-  ctaBox.querySelector('.qscr').style.transform='matrix3d('+[h[0],h[3],0,h[6],h[1],h[4],0,h[7],0,0,1,0,h[2],h[5],0,1].join(',')+')';}
-if(ctaBox&&ctaCv){
-  if(window.PXL_DINO)ctaP=PXL_DINO.attach(ctaCv,CTAM.idle);
-  const im=ctaBox.querySelector('img');if(im)im.addEventListener('load',ctaFit);
-  addEventListener('resize',ctaFit);if('ResizeObserver' in window)new ResizeObserver(ctaFit).observe(ctaBox);ctaFit();
-}
-/* the face to rest on: excited when every required field is valid, otherwise watching the form */
-/* NB: form.checkValidity() fires 'invalid' events on every bad field (would trigger the surprised face and the analytics), so read the validity flags instead */
-const ctaValid=()=>[...wl.elements].every(e=>!e.willValidate||e.validity.valid);
-const ctaRest=()=>ctaValid()?CTAM.excited:CTAM.watch;
-function ctaMood(spec,ms,after){if(!ctaP)return;clearTimeout(ctaMoodT);PXL_DINO.set(ctaP,spec);
-  if(ms)ctaMoodT=setTimeout(()=>PXL_DINO.set(ctaP,after?after():ctaRest()),ms);}
-const CTA_LOOK={src:'assets/web/dino_cta_look.webp',quad:ctaBox?ctaBox.dataset.quad:'',alt:'Dino looking at the form'};
-/* front view (same render as the product shots): the screen is an upright rectangle */
-const CTA_FRONT={src:'assets/web/dino_front_blank.webp',quad:'34.86,38.81 65.20,38.81 65.20,53.95 34.86,53.95',alt:'Dino, facing you'};
-if(ctaBox){const pre=new Image();pre.src=CTA_FRONT.src;}
-const ctaCard=document.querySelector('.cta');let ctaLoopT=0,ctaHeartT=0;
-const ctaHeartUrls=['#2F9083','#C7EAFF'].map(col=>{const rows=['.##.##.','#######','#######','.#####.','..###..','...#...'],cv=document.createElement('canvas');
-  cv.width=7;cv.height=6;const c=cv.getContext('2d');c.fillStyle=col;rows.forEach((r,y)=>[...r].forEach((ch,x)=>{if(ch==='#')c.fillRect(x,y,1,1);}));return cv.toDataURL();});
-function ctaHearts(n){if(!ctaBox||ctaReduce)return;for(let i=0;i<n;i++){const h=document.createElement('i');h.className='hrt';
-  h.style.left=(22+Math.random()*56)+'%';h.style.top=(26+Math.random()*16)+'%';h.style.setProperty('--dx',((Math.random()-.5)*60)+'px');
-  h.style.backgroundImage='url('+ctaHeartUrls[i%2]+')';h.style.animationDelay=(i*120)+'ms';h.addEventListener('animationend',()=>h.remove());ctaBox.appendChild(h);}}
-/* reserved: Dino to the centre, facing the visitor; fresh sign-ups also get the bob, hearts and a pet every few seconds */
-function ctaReserved(on,fresh){if(!ctaBox)return;const im=ctaBox.querySelector('img'),to=on?CTA_FRONT:CTA_LOOK;
-  clearInterval(ctaLoopT);clearInterval(ctaHeartT);ctaBox.classList.remove('bob');
-  ctaBox.querySelectorAll('.hrt').forEach(h=>h.remove());
-  ctaCard.classList.toggle('is-reserved',on);ctaBox.classList.toggle('front',on);
-  ctaBox.dataset.quad=to.quad;if(im){if(!im.src.endsWith(to.src))im.src=to.src;im.alt=to.alt;}ctaFit();
-  if(on&&fresh&&!ctaReduce){ctaBox.classList.add('bob');ctaHearts(8);let n=0;
-    ctaHeartT=setInterval(()=>{ctaHearts(2);if(++n>8)clearInterval(ctaHeartT);},800);
-    ctaLoopT=setInterval(()=>{if(doneBox.hidden||document.hidden)return;if(ctaP)PXL_DINO.set(ctaP,{key:'pet',once:true,then:CTAM.love});ctaHop();},6500);}}
-function ctaHop(){if(!ctaBox||ctaReduce||!window.PXL_DINO)return;const n=performance.now();if(n-ctaLastHop<700)return;ctaLastHop=n;PXL_DINO.hop(ctaBox);}
-
-/* reservation confirmed: live Dino face, pixel tick, pixel confetti, share */
-const doneBox=document.getElementById('wldone');
-const TICK=['........#','.......##','#.....##.','##...##..','.##.##...','..###....','...#.....'];
-function drawTick(cv){const u=2,cells=[];TICK.forEach((r,y)=>[...r].forEach((c,x)=>{if(c==='#')cells.push([x,y]);}));cells.sort((a,b)=>a[0]-b[0]);
-  cv.width=9*u;cv.height=7*u;const c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);c.fillStyle='#FCF8F0';let i=0;
-  const t=setInterval(()=>{if(i>=cells.length){clearInterval(t);return;}const[x,y]=cells[i++];c.fillRect(x*u,y*u,u,u);},45);}
-function confetti(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  const cv=document.getElementById('confetti'),box=cv.parentElement.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1),U=6;
-  cv.width=box.width*dpr;cv.height=box.height*dpr;const c=cv.getContext('2d');c.scale(dpr,dpr);
-  const cols=['#FCF8F0','#2F9083','#C7EAFF','#E6DED4'],ps=[];
-  for(let i=0;i<90;i++)ps.push({x:box.width*(.15+Math.random()*.7),y:box.height*(cv.parentElement.classList.contains('is-reserved')?.34:.55),vx:(Math.random()-.5)*9,vy:-(6+Math.random()*9),c:cols[i%4],s:U*(Math.random()<.25?2:1)});
-  const t0=performance.now();(function f(t){const k=(t-t0)/1000;c.clearRect(0,0,box.width,box.height);
-    ps.forEach(p=>{p.vy+=.38;p.x+=p.vx;p.y+=p.vy;c.globalAlpha=Math.max(0,1-k/2.6);c.fillStyle=p.c;
-      c.fillRect(Math.round(p.x/U)*U,Math.round(p.y/U)*U,p.s,p.s);});
-    if(k<2.6)requestAnimationFrame(f);else c.clearRect(0,0,box.width,box.height);})(t0);}
-function showReserved(name,email,fresh){
-  const first=(name||'').trim().split(/\s+/)[0]||'friend';
-  document.getElementById('doneName').textContent=first;
-  const line=document.getElementById('doneLine');
-  if(email){line.textContent='';line.append('Your Dino is reserved. We\'ll email ');const b=document.createElement('b');b.textContent=email;line.append(b,' when pre-orders open, with the price and shipping date. Nothing to pay today.');}
-  wl.hidden=true;msg.textContent='';doneBox.hidden=false;
-  ctaReserved(true,fresh);
-  if(ctaP){clearTimeout(ctaMoodT);clearTimeout(ctaOutT);PXL_DINO.set(ctaP,fresh?{key:'pet',once:true,then:CTAM.love}:CTAM.love);}
-  drawTick(document.getElementById('doneTick'));
-  const tb=document.querySelector('.topbar .tbbtn');if(tb){tb.classList.add('is-reserved');tb.firstChild.textContent='reserved ';tb.setAttribute('href','#preorder');}
-  if(fresh){confetti();const im=document.getElementById('ctaImg');if(im&&window.PXL_DINO)PXL_DINO.hop(im);
-    ctaCard.scrollIntoView({behavior:'smooth',block:'center'});}
-  try{localStorage.setItem('pixling_reserved',JSON.stringify({n:first}));}catch(_){}
-}
-document.getElementById('shareBtn').addEventListener('click',async()=>{
-  const url=location.href.split('#')[0],b=document.getElementById('shareBtn');pxl('share_click');
-  try{if(navigator.share){await navigator.share({title:'Dino by Pixling',text:'I just reserved a Dino, a tiny desk friend with a pixel face.',url});return;}
-    await navigator.clipboard.writeText(url);b.firstChild.textContent='link copied ';}catch(_){}});
-document.getElementById('againBtn').addEventListener('click',()=>{pxl('reserve_another');
-  try{localStorage.removeItem('pixling_reserved');}catch(_){}
-  doneBox.hidden=true;wl.hidden=false;ctaReserved(false);ctaMood(CTAM.idle);const tb=document.querySelector('.topbar .tbbtn');
-  if(tb){tb.classList.remove('is-reserved');tb.firstChild.textContent='pre-order ';}
-  wl.querySelector('input[name=name]').focus();});
-
-/* waitlist form */
-const wl=document.getElementById('wl'),msg=document.getElementById('wlmsg');
-if(wl){let started=false,t0=0;const filled=new Set();
-  wl.addEventListener('focusin',e=>{if(!started&&e.target.name){started=true;t0=performance.now();pxl('form_start',{first_field:e.target.name});}});
-  wl.addEventListener('change',e=>{const n=e.target.name;if(n&&e.target.value&&!filled.has(n)){filled.add(n);pxl('form_field_complete',{field:n});}});
-  wl.addEventListener('invalid',e=>{pxl('form_validation_error',{field:e.target.name,type:Object.keys(e.target.validity).find(k=>e.target.validity[k]&&k!=='valid')||'invalid'});},true);
-  wl.addEventListener('submit',e=>{e.preventDefault();
-    const d=Object.fromEntries(new FormData(wl)),name=(d.name||'').trim(),email=(d.email||'').trim().toLowerCase(),mobile=(d.mobile||'').trim();
-    pxl('waitlist_submit',Object.assign({name,email,mobile,has_mobile:!!mobile,consent_text:'v1-preorder-updates-only',
-      seconds_to_submit:started?Math.round((performance.now()-t0)/100)/10:null,max_scroll_pct:maxScroll},UTM));
-    try{if(ready)posthog.identify(email,{email,name,mobile:mobile||undefined,pixling_waitlist:true});}catch(_){}
-    showReserved(name,email,true);wl.reset();started=false;filled.clear();});
-  /* pre-order Dino reacts to the form (separate listeners; analytics above untouched) */
-  wl.addEventListener('focusin',()=>{clearTimeout(ctaOutT);ctaMood(ctaRest());});
-  wl.addEventListener('input',()=>{if(ctaValid()){ctaMood(CTAM.excited);}else ctaMood(CTAM.excited,1100);ctaHop();});
-  wl.addEventListener('change',e=>{if(e.target.name&&e.target.value&&!ctaValid())ctaMood(CTAM.happy,900);});
-  wl.addEventListener('invalid',()=>ctaMood(CTAM.surprised,1300),true);
-  wl.addEventListener('focusout',()=>{clearTimeout(ctaOutT);ctaOutT=setTimeout(()=>{
-    if(!wl.contains(document.activeElement)&&doneBox.hidden){clearTimeout(ctaMoodT);PXL_DINO&&ctaP&&PXL_DINO.set(ctaP,CTAM.idle);}},1500);});
-  /* returning visitor who already reserved on this browser */
-  try{const r=JSON.parse(localStorage.getItem('pixling_reserved')||'null');if(r&&r.n)showReserved(r.n,'',false);}catch(_){}
-  /* preview the confirmed state without submitting: open the page with #preview-reserved */
-  if(location.hash==='#preview-reserved')showReserved('Sam','you@email.com',true);
-}
-
-/* leaving the page */
-let sent=false;
-function leave(){if(sent)return;sent=true;pxl('page_leave',{seconds_visible:Math.round(vis),max_scroll_pct:maxScroll,sections_seen:seen.size,
-  reached_preorder:seen.has('preorder')});}
-document.addEventListener('visibilitychange',()=>{if(document.hidden)leave();else sent=false;});
-addEventListener('pagehide',leave);
-
-/* js errors (max 5) */
-let errs=0;addEventListener('error',e=>{if(errs++<5)pxl('js_error',{message:String(e.message).slice(0,160),source:String(e.filename||'').split('/').pop()});});
+/* ---------- waitlist ---------- */
+document.getElementById('wl').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,m=document.getElementById('wlmsg'),ep=f.dataset.endpoint;
+  if(!ep){m.textContent='pre-orders open soon.';return;}
+  try{await fetch(ep,{method:'POST',body:new FormData(f)});m.textContent='reserved. we\'ll write when pre-orders open.';f.reset();}catch(_){m.textContent='that didn\'t go through. try again?';}});
 })();
 </script>
 </body>

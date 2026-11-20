@@ -376,8 +376,8 @@ footer a:hover{color:var(--teal)}
       </div>
       <div class="stage">
         <div class="stamp step sm" aria-label="no camera, no mic"><canvas id="heart" width="7" height="6"></canvas>no camera<br>no mic</div>
-        <div class="prod d2"><img src="assets/web/dino_back.webp" alt="Dino from the back" loading="eager"></div>
-        <div class="prod d1" data-screen="video"><img src="assets/web/dino_front_blank.webp" alt="Dino, front view" loading="eager"></div>
+        <div class="prod d2"><img src="assets/dino_back.webp" alt="Dino from the back" loading="eager"></div>
+        <div class="prod d1" data-screen="video"><img src="assets/dino_front_blank.webp" alt="Dino, front view" loading="eager"></div>
       </div>
     </div>
       </div>
@@ -408,7 +408,7 @@ footer a:hover{color:var(--teal)}
 <section class="meet" id="meet">
   <div class="wrap meet-grid">
     <div class="meet-vis">
-      <div class="big"><div class="prod" id="meetDino" data-screen="expr:0"><img src="assets/web/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
+      <div class="big"><div class="prod" id="meetDino" data-screen="expr:0"><img src="assets/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
       <div class="thumbs" id="thumbs"></div>
     </div>
     <div>
@@ -454,7 +454,7 @@ footer a:hover{color:var(--teal)}
     <h2 style="margin-top:14px">Charming in small doses. Never loud, never needy.</h2>
     <div class="play-grid">
       <div class="pcard step"><div class="s"><canvas data-scene="rawr" data-delay="600"></canvas></div><b>A tiny rawr</b><span>Every few minutes it does a little rawr, just for you.</span><div class="t">idle quirk · every 2–4 min</div></div>
-      <div class="center"><div class="prod" id="playDino" data-screen="scene:idle"><img src="assets/web/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
+      <div class="center"><div class="prod" id="playDino" data-screen="scene:idle"><img src="assets/dino_front_blank.webp" alt="Dino" loading="lazy"></div></div>
       <div class="pcard step"><div class="s"><canvas data-scene="sleep" data-delay="2500"></canvas></div><b>It gets sleepy</b><span>Leave it alone and it dozes off. Any touch wakes it.</span><div class="t">no input for 5 min</div></div>
     </div>
     <div class="gestures" id="gestures"></div>
@@ -476,7 +476,7 @@ footer a:hover{color:var(--teal)}
 <section class="inside" id="inside">
   <div class="wrap inside-grid">
     <div class="xray-wrap">
-      <img src="assets/web/dino_exploded.webp" alt="Dino exploded view: back plate, body and screen bezel" loading="lazy" style="width:100%;display:block">
+      <img src="assets/dino_exploded.webp" alt="Dino exploded view: back plate, body and screen bezel" loading="lazy" style="width:100%;display:block">
     </div>
     <div>
       <div class="eyebrow">05 · what's inside</div>
@@ -545,7 +545,7 @@ footer a:hover{color:var(--teal)}
     </div>
     <div class="cta-right"><div class="ctaprod" id="ctaImg" data-quad="29.71,38.37 51.77,40.41 51.76,55.16 29.89,52.09">
       <div class="ctabob">
-        <img src="assets/web/dino_cta_look.webp" width="1100" height="1100" alt="Dino looking at the form" loading="lazy">
+        <img src="assets/dino_cta_look.webp" width="1100" height="1100" alt="Dino looking at the form" loading="lazy">
         <div class="qscr"><canvas id="ctaScreen"></canvas></div>
       </div>
     </div></div>
@@ -790,9 +790,9 @@ const ctaValid=()=>[...wl.elements].every(e=>!e.willValidate||e.validity.valid);
 const ctaRest=()=>ctaValid()?CTAM.excited:CTAM.watch;
 function ctaMood(spec,ms,after){if(!ctaP)return;clearTimeout(ctaMoodT);PXL_DINO.set(ctaP,spec);
   if(ms)ctaMoodT=setTimeout(()=>PXL_DINO.set(ctaP,after?after():ctaRest()),ms);}
-const CTA_LOOK={src:'assets/web/dino_cta_look.webp',quad:ctaBox?ctaBox.dataset.quad:'',alt:'Dino looking at the form'};
+const CTA_LOOK={src:'assets/dino_cta_look.webp',quad:ctaBox?ctaBox.dataset.quad:'',alt:'Dino looking at the form'};
 /* front view (same render as the product shots): the screen is an upright rectangle */
-const CTA_FRONT={src:'assets/web/dino_front_blank.webp',quad:'34.86,38.81 65.20,38.81 65.20,53.95 34.86,53.95',alt:'Dino, facing you'};
+const CTA_FRONT={src:'assets/dino_front_blank.webp',quad:'34.86,38.81 65.20,38.81 65.20,53.95 34.86,53.95',alt:'Dino, facing you'};
 if(ctaBox){const pre=new Image();pre.src=CTA_FRONT.src;}
 const ctaCard=document.querySelector('.cta');let ctaLoopT=0,ctaHeartT=0;
 const ctaHeartUrls=['#2F9083','#C7EAFF'].map(col=>{const rows=['.##.##.','#######','#######','.#####.','..###..','...#...'],cv=document.createElement('canvas');
