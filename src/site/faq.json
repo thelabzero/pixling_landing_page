@@ -1,58 +1,62 @@
 [
  [
   "What is Dino?",
-  "Dino is a small desk companion with a 128 × 64 screen for a face. It blinks, peeks, gets sleepy, and shows you the time when you double-tap it. It is the first Pixling. <a href=\"./\">Meet Dino on the home page</a>."
+  "A small desk friend with a screen for a face. It blinks, gets sleepy, and shows the time when you double-tap it. It is the first Pixling."
  ],
  [
   "What is a Pixling?",
-  "A Pixling is a character made of pixels, one that lives entirely on a screen. Every Pixling starts as a single pixel that wakes up and becomes someone. <a href=\"about\">Read the idea behind it</a>."
+  "A character made of pixels, living on a screen. Dino is the first. <a href=\"about\">Read more</a>."
  ],
  [
-  "Does Dino have a camera or a microphone?",
-  "No. Dino has no camera and no microphone, by design. It is a companion, not a sensor."
+  "Does Dino have a camera or microphone?",
+  "No. Never."
+ ],
+ [
+  "Does Dino need Wi-Fi?",
+  "Yes, to get the time."
  ],
  [
   "Do I need an app or an account?",
-  "No. Dino works out of the box, with no account and no setup to enjoy it."
+  "No account. An optional app is coming, to connect your Dino and explore more. Dino works without it."
  ],
  [
   "What can Dino do?",
-  "It shows the time, and works as an alarm and a stopwatch. It runs focus sessions of 25, 45 or 60 minutes and leads you through a short breathing break afterwards. It has 24 expressions, does a tiny rawr every few minutes, and falls asleep if you leave it alone for five minutes."
+  "Show the time, ring an alarm, run a stopwatch, and keep you company while you focus (25, 45 or 60 minutes). It has 24 faces and gets sleepy if left alone."
  ],
  [
-  "How do I control it?",
-  "By touch. Tap, double-tap, hold to pet it, or long press for the menu. It also feels tilts, shakes, flips and being picked up."
+  "How do I use it?",
+  "Touch. Tap, double-tap, hold to pet, long press for the menu."
  ],
  [
-  "How big is Dino and what is it made of?",
-  "Dino is about 7.5 cm tall. The body, the screen bezel and the back plate are three printed parts in matte PLA."
+  "How big is it?",
+  "About 7.5 cm tall. Three printed parts in matte PLA."
  ],
  [
   "How do I charge it?",
-  "Dino has a rechargeable battery and charges over USB-C. The cable comes in the box. It also lets you know when it is running low."
+  "USB-C. The cable is in the box."
  ],
  [
   "How long does the battery last?",
-  "We have not published a figure yet. We will share a measured number with the spec sheet rather than a guess."
+  "About 8 hours in normal mode, and about 12 hours in Power Saving mode."
  ],
  [
-  "How much does Dino cost, and when does it ship?",
-  "Pre-orders have not opened, and the price and shipping date are not announced yet. Reserve a Dino and we will write to you first, with both, when pre-orders open."
+  "What does it cost and when does it ship?",
+  "Not announced yet. Reserve a Dino and we will tell you first."
  ],
  [
-  "What does it cost to reserve one?",
-  "Nothing. Reserving only puts you on the list, and nothing is charged today."
+  "Does reserving cost anything?",
+  "No. Nothing is charged today."
  ],
  [
-  "What colours does it come in?",
-  "Matte black to start. More colours come later."
+  "What colours are there?",
+  "Matte black first. More later."
  ],
  [
-  "What are the games and friends features?",
-  "Tiny games (meteor dodge, snack snap, desk pong, hot egg) and pairing two Dinos by knocking them together are planned for later updates. They are not in the first release."
+  "Games and friends?",
+  "Coming in a later update, not in the first release."
  ],
  [
-  "What do you do with the details I give?",
-  "We use your name, email and optional mobile number only to tell you about Dino pre-orders. <a href=\"privacy\">Read the privacy page</a> for the full detail."
+  "What happens to my details?",
+  "We only use them to tell you about pre-orders. <a href=\"privacy\">Privacy policy</a>."
  ]
 ]
