@@ -34,7 +34,7 @@ def footnav(root): return f'<a href="{root}">home</a>' + ''.join(f'<a href="{roo
 ARROW = '<span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span>'
 def cta(root): return (f'<div class="cta2 step lg"><div><div class="eyebrow">pre-order · dino by pixling</div><h2>Bring Dino home<span class="sp">.</span></h2>'
     f'<p>Reserve yours and we will write the moment pre-orders open, with the price and shipping date. Nothing to pay today.</p></div>'
-    f'<a class="btn step sm" href="{root}#preorder">reserve mine {ARROW}</a></div>')
+    f'<a class="btn step sm" href="{root or "./"}#preorder">reserve mine {ARROW}</a></div>')
 contact = (f'To ask us anything about your data, write to <a href="mailto:{esc(cfg["contact_email"])}">{esc(cfg["contact_email"])}</a>.' if cfg.get('contact_email')
            else 'Our contact address for data requests will be published here before pre-orders open.')
 
@@ -58,7 +58,7 @@ for fn in sorted(os.listdir(os.path.join(H, 'pages'))):
                       "description": meta['description'], "image": BASE + '/assets/og-image.png', "url": f'{BASE}/{slug}'})
     art = f'<div class="art"><img src="{meta["art"]}" alt="Dino, the first Pixling" width="1100" height="1100" loading="eager"></div>' if meta.get('art') else ''
     out = rd(H, 'layout.html')
-    for k, v in {'title': esc(meta['title']), 'description': esc(meta['description']), 'robots': 'index,follow,max-image-preview:large', 'root': '',
+    for k, v in {'title': esc(meta['title']), 'description': esc(meta['description']), 'robots': 'index,follow,max-image-preview:large', 'root': '', 'home': './',
                  'canonical': f'<link rel="canonical" href="{BASE}/{slug}">', 'ogurl': f'<meta property="og:url" content="{BASE}/{slug}">', 'base': BASE,
                  'jsonld': '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False) + '</script>',
                  'navleft': navleft(meta.get('nav'), ''), 'eyebrow': esc(meta['eyebrow']), 'h1': esc(meta['h1']), 'lead': esc(meta['lead']), 'art': art,
@@ -73,7 +73,7 @@ for f in os.listdir(PUB):
 
 # ---- 404 (absolute asset paths: it can be served from any URL) ----
 out = rd(H, 'layout.html')
-for k, v in {'title': 'Page not found · Pixling', 'description': 'This page wandered off.', 'robots': 'noindex', 'root': '/', 'canonical': '', 'ogurl': '', 'base': BASE, 'jsonld': '',
+for k, v in {'home': '/', 'title': 'Page not found · Pixling', 'description': 'This page wandered off.', 'robots': 'noindex', 'root': '/', 'canonical': '', 'ogurl': '', 'base': BASE, 'jsonld': '',
              'navleft': navleft(None, '/'), 'eyebrow': '404 · not found', 'h1': 'This page wandered off', 'lead': 'Dino looked everywhere. Try the home page, or ask the FAQ.', 'art': '',
              'body': f'<section class="blk"><div class="wrap"><a class="btn dark step sm" href="/">back home {ARROW}</a> <a class="link" style="margin-left:18px;font-family:var(--mono);font-size:14px" href="/faq">read the faq</a></div></section>',
              'cta': '', 'footnav': footnav('/')}.items():
