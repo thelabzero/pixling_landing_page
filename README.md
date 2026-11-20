@@ -19,6 +19,10 @@ Static site, deployed on Vercel straight from `public/`. No framework, no build 
 3. Preview: `python3 -m http.server -d public 8000`
 4. Commit `public/` together with the source and push; Vercel redeploys on push to `main`
 
+## GitHub Pages
+`.github/workflows/pages.yml` publishes `public/` on every push to `main` (repo Settings > Pages > Source = GitHub Actions).
+Live at https://thelabzero.github.io/pixling_landing_page/
+
 ## Vercel
 Import the repo; leave Framework Preset as "Other". `vercel.json` sets everything.
 Do not put `requirements.txt`, `pyproject.toml` or `app.py`/`main.py` in the repo root: Vercel will treat the project as Python and fail with `PYTHON_ENTRYPOINT_NOT_FOUND`.
