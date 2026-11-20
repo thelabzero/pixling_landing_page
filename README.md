@@ -5,7 +5,7 @@ Static site, deployed on Vercel straight from `public/`. No framework, no build 
 ## Layout
 - `public/` – **everything that gets deployed** (`index.html`, `assets/*.webp`, `boot_film_wedge_life.mp4`)
 - `src/page/` – landing page source. Edit `src.html`, then `python3 src/build.py` writes `public/index.html`
-- `src/site/` – subpages (`dino`, `about`, `faq`, `privacy`, `404`): `pages/*.html` content, `layout.html`, `site.css`, `site.js`, `faq.json`, `site.json`. Same build command also writes `robots.txt` and `sitemap.xml`
+- `src/site/` – subpages (`about`, `faq`, `privacy`, `404`): `pages/*.html` content, `layout.html`, `site.css`, `site.js`, `faq.json`, `site.json`. Same build command also writes `robots.txt` and `sitemap.xml`
   - `fonts.css` (IBM Plex, inlined), `wedge.js` (Dino 128×64 face engine from the Wedge Sheet)
 - `assets/renders/` – Blender output PNGs (source for the web images)
 - `cad/` – STLs, Blender render pipeline, `requirements.txt` (only for rendering)

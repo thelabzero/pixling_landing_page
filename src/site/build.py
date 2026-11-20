@@ -27,9 +27,9 @@ wr(os.path.join(PUB, 'assets', 'site.js'), rd(H, 'site.js').replace('/*BRAND*/',
 wr(os.path.join(PUB, 'assets', 'fonts.css'), rd(ROOT, 'src', 'page', 'fonts.css'))
 
 # ---- pages ----
-NAV = [('dino', 'dino'), ('about', 'about')]
+NAV = [('about', 'about')]
 def navleft(cur, root): return ''.join(f'<a class="lnk{" on" if s == cur else ""}" href="{root}{s}">{t}</a>' for s, t in NAV)
-FOOT = [('dino', 'dino'), ('about', 'about'), ('faq', 'faq'), ('privacy', 'privacy')]
+FOOT = [('about', 'about'), ('faq', 'faq'), ('privacy', 'privacy')]
 def footnav(root): return f'<a href="{root}">home</a>' + ''.join(f'<a href="{root}{s}">{t}</a>' for s, t in FOOT)
 ARROW = '<span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span>'
 def cta(root): return (f'<div class="cta2 step lg"><div><div class="eyebrow">pre-order · dino by pixling</div><h2>Bring Dino home<span class="sp">.</span></h2>'
@@ -66,6 +66,11 @@ for fn in sorted(os.listdir(os.path.join(H, 'pages'))):
         out = out.replace('{{' + k + '}}', v)
     wr(os.path.join(PUB, slug + '.html'), out); pages.append(slug)
 
+# remove stale generated pages (a deleted page must not linger in public/)
+for f in os.listdir(PUB):
+    if f.endswith('.html') and f not in ('index.html', '404.html') and f[:-5] not in pages:
+        os.remove(os.path.join(PUB, f))
+
 # ---- 404 (absolute asset paths: it can be served from any URL) ----
 out = rd(H, 'layout.html')
 for k, v in {'title': 'Page not found · Pixling', 'description': 'This page wandered off.', 'robots': 'noindex', 'root': '/', 'canonical': '', 'ogurl': '', 'base': BASE, 'jsonld': '',
@@ -77,7 +82,7 @@ wr(os.path.join(PUB, '404.html'), out)
 
 # ---- robots + sitemap ----
 wr(os.path.join(PUB, 'robots.txt'), f'User-agent: *\nAllow: /\n\nSitemap: {BASE}/sitemap.xml\n')
-urls = [BASE + '/'] + [f'{BASE}/{s}' for s in ('dino', 'about', 'faq', 'privacy')]
+urls = [BASE + '/'] + [f'{BASE}/{s}' for s in ('about', 'faq', 'privacy')]
 wr(os.path.join(PUB, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
    ''.join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>\n' for u in urls) + '</urlset>\n')
 print('built', pages, '+ 404, site.css, site.js, fonts.css, robots, sitemap')
