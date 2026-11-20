@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pixling.dino.zerolab.in/sitemap.xml

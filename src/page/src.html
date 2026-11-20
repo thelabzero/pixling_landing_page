@@ -5,6 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dino by Pixling · a tiny friend, alive in pixels</title>
 <meta name="description" content="Dino is the first Pixling: a little desk monster with a screen for a face. It blinks, peeks, gets sleepy, and shows you the time on a double-tap.">
+<meta name="theme-color" content="#282020">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://pixling.dino.zerolab.in/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pixling">
+<meta property="og:title" content="Dino by Pixling · a tiny friend, alive in pixels">
+<meta property="og:description" content="Dino is the first Pixling: a little desk monster with a screen for a face. It blinks, peeks, gets sleepy, and shows you the time on a double-tap.">
+<meta property="og:url" content="https://pixling.dino.zerolab.in/">
+<meta property="og:image" content="https://pixling.dino.zerolab.in/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dino, a small desk monster with a pixel screen for a face">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dino by Pixling · a tiny friend, alive in pixels">
+<meta name="twitter:description" content="Dino is the first Pixling: a little desk monster with a screen for a face. It blinks, peeks, gets sleepy, and shows you the time on a double-tap.">
+<meta name="twitter:image" content="https://pixling.dino.zerolab.in/assets/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://pixling.dino.zerolab.in/#org","name":"Pixling","url":"https://pixling.dino.zerolab.in/"},
+{"@type":"WebSite","@id":"https://pixling.dino.zerolab.in/#site","url":"https://pixling.dino.zerolab.in/","name":"Pixling","publisher":{"@id":"https://pixling.dino.zerolab.in/#org"}},
+{"@type":"Product","name":"Dino","brand":{"@id":"https://pixling.dino.zerolab.in/#org"},"description":"Dino is the first Pixling: a little desk monster with a screen for a face. It blinks, peeks, gets sleepy, and shows you the time on a double-tap.","image":"https://pixling.dino.zerolab.in/assets/og-image.png","url":"https://pixling.dino.zerolab.in/"}
+]}
+</script>
 <style>
 /*FONTS*/
 :root{
@@ -527,7 +551,7 @@ footer a:hover{color:var(--teal)}
         <label><span>name</span><input type="text" name="name" placeholder="your name" required autocomplete="name" maxlength="80"></label>
         <label><span>email</span><input type="email" name="email" placeholder="you@email.com" required autocomplete="email"></label>
         <label class="full"><span>mobile <i>optional</i></span><input type="tel" name="mobile" placeholder="+91 98765 43210" autocomplete="tel" inputmode="tel" pattern="[+]?[0-9 ]{10,15}" title="10-digit mobile number, with or without +91"></label>
-        <p class="consent full">We'll only use these to tell you about Dino pre-orders. No spam, no sharing.</p>
+        <p class="consent full">We'll only use these to tell you about Dino pre-orders. No spam, no sharing. <a href="privacy" style="text-decoration:underline">Privacy</a></p>
         <button class="btn step sm" type="submit">reserve mine <span class="arr step sm"><canvas class="px-arrow" width="7" height="7" style="width:14px;height:14px"></canvas></span></button>
       </form>
       <div class="msg" id="wlmsg"></div>
@@ -554,7 +578,7 @@ footer a:hover{color:var(--teal)}
   <footer>
     <span>© 2026 Pixling</span>
     <canvas id="wordmark2" data-fg="#282020" data-bit="0.5"></canvas>
-    <div class="soc"><a href="#">instagram</a><a href="#">x</a><a href="#">youtube</a></div>
+    <div class="soc"><a href="dino">dino</a><a href="about">about</a><a href="faq">faq</a><a href="privacy">privacy</a></div>
   </footer>
 </div>
 </main>
